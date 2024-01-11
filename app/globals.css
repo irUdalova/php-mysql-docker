@@ -1,0 +1,104 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+  background-color: #2e3134;
+  color: #c7c1bd;
+}
+
+/* main {
+  width: 1200px;
+  mardgin-left: auto;
+  text-align: center;
+} */
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.title {
+  color: white;
+  font-weight: 400;
+}
+
+.post {
+  max-width: 300px;
+  width: auto;
+  border: 1px solid white;
+  padding: 10px;
+}
+
+.posts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.post:hover {
+  background-color: #53595e;
+}
+
+.form-wrap {
+  border: 1px solid white;
+  max-width: 600px;
+  padding: 30px;
+  margin: 30px auto 37px;
+}
+
+.submit {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 450px;
+}
+
+.inp-text {
+  display: block;
+  width: auto;
+  height: 60px;
+  padding-left: 18px;
+  padding-top: 3px;
+  margin-top: 20px;
+  font-family: inherit;
+  background: white;
+  border: 2px solid white;
+}
+
+.sbm-err {
+  color: red;
+  text-align: left;
+  padding-top: 5px;
+}
+
+.inp-text.invalid {
+  border: 2px solid red;
+}
+
+.sbm-btn {
+  text-align: center;
+  text-decoration: none;
+  max-width: 220px;
+  width: 100%;
+  height: 40px;
+  font-weight: normal;
+  color: inherit;
+  background: none;
+  margin: 20px auto 0;
+  border: 2px solid white;
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+}
+
+.sbm-btn:hover {
+  background-color: white;
+  color: black;
+}
