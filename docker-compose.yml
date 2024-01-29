@@ -5,7 +5,9 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - "./:/var/www/html"
+      # - "./:/var/www/html"
+      - ".:/var/www/html"
+      # - "./.htaccess:/var/www/html/.htaccess"
     ports:
       - 80:80
       - 443:443 #for futur ssl traffic`
