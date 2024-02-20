@@ -1,37 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@200;300;400;600&display=swap");
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: "Roboto", sans-serif;
-  background-color: #2e3134;
-  color: #c7c1bd;
+  font-family: "Roboto Condensed", sans-serif;
+  background-color: #efefef;
+  color: #555555;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-/* main {
-  width: 1200px;
-  mardgin-left: auto;
-  text-align: center;
-} */
+main {
+  flex-grow: 1;
+}
 
 .container {
-  max-width: 1440px;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.post-container {
   text-align: center;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  margin-top: 60px;
 }
 
 .title {
-  color: white;
   font-weight: 400;
 }
 
 .post {
-  max-width: 300px;
-  width: auto;
+  width: calc((100% - 60px) / 3);
   border: 1px solid white;
   padding: 10px;
 }
@@ -40,11 +45,14 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
 .post:hover {
-  background-color: #53595e;
+  background-color: white;
+  border-bottom: 1px solid #f76f72;
 }
 
 .form-wrap {
@@ -52,18 +60,19 @@ body {
   max-width: 600px;
   padding: 30px;
   margin: 30px auto 37px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .submit {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 450px;
+  width: 100%;
 }
 
 .inp-text {
   display: block;
-  width: auto;
+  width: 100%;
   height: 60px;
   padding-left: 18px;
   padding-top: 3px;
@@ -74,31 +83,129 @@ body {
 }
 
 .sbm-err {
-  color: red;
+  color: #f76f72;
   text-align: left;
   padding-top: 5px;
 }
 
 .inp-text.invalid {
-  border: 2px solid red;
+  border: 2px solid #f76f72;
+}
+
+.form-sbm-status {
+  color: #f76f72;
+  text-align: center;
+}
+
+.form-sbm-status.succes {
+  color: #555555;
+  text-align: center;
 }
 
 .sbm-btn {
   text-align: center;
   text-decoration: none;
-  max-width: 220px;
   width: 100%;
   height: 40px;
   font-weight: normal;
   color: inherit;
   background: none;
   margin: 20px auto 0;
-  border: 2px solid white;
+  background-color: #f76f72;
+  border: none;
+  color: white;
   cursor: pointer;
   transition: 0.5s ease-in-out;
 }
 
 .sbm-btn:hover {
-  background-color: white;
-  color: black;
+  background-color: #555555;
+}
+
+/* ============header================== */
+
+.header {
+  background-color: #efefef;
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  height: 90px;
+}
+
+.logo-ico {
+  background-image: url("img/logo.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 80px;
+  height: 66px;
+  transition: 0.3s;
+}
+
+.logo-ico:hover,
+.play-button:hover {
+  cursor: pointer;
+  filter: brightness(0) saturate(100%) invert(27%) sepia(10%) saturate(14%)
+    hue-rotate(335deg) brightness(93%) contrast(88%);
+}
+
+.nav {
+  margin-left: auto;
+  border-bottom: 2px solid #f76f72;
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 50px;
+}
+
+.nav-item {
+  padding-left: 30px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #555555;
+  transition: 0.3s;
+}
+
+.nav-link:hover {
+  text-decoration: none;
+  color: #f76f72;
+}
+
+/* ============footer=================== */
+footer {
+  flex-shrink: 0;
+}
+
+.foot-container {
+  display: flex;
+  height: 60px;
+  justify-content: center;
+  align-items: center;
+  background-color: #a9a9a9;
+}
+
+.info {
+  display: flex;
+  color: #555555;
+  font-weight: normal;
+  gap: 20px;
+}
+
+.github-link {
+  text-decoration: none;
+  color: #555555;
+  transition: 0.3s;
+}
+
+.github-link:hover {
+  color: white;
 }

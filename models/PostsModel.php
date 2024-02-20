@@ -1,13 +1,17 @@
 <?php
 
-class Posts {
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+require_once ROOT_DIR . '/config/DatabaseConnector.php';
+
+class PostsModel {
   //DB vars
   private $conn;
   private $table = "php_docker_table";
 
   //Constructor with DB
-  public function __construct($db) {
-    $this->conn = $db;
+  public function __construct() {
+    $this->conn = DatabaseConnector::getConnection();
   }
 
   //Get Posts

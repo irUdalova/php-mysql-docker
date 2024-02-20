@@ -2,33 +2,33 @@
 GET http://localhost/items
 
 ###
-GET http://localhost/posts
+GET http://localhost/api/posts
 
 ###
-GET http://localhost/posts/31
+GET http://localhost/api/posts/43
 
 ###
-POST http://localhost/posts/
+POST http://localhost/api/posts
 Content-Type: application/json
 
 {
-  "title": "Social media and teenage health-31",
+  "title": "Social media and teenage health-100",
   "body": "What are the health risks of social media for teenagers?"
 }
 
 ###
-POST http://localhost/posts/
+POST http://localhost/api/posts
 Content-Type: application/json
 
 
 ###
-PUT http://localhost/posts/31
+PUT http://localhost/api/posts/61
 Content-Type: application/json
 
 {
-  "title": "How fans talk about their passions-31-updated",
+  "title": "How fans talk about their passions-60-updated!!!!",
   "body": "What language do fans use?"
 }
 
 ###
-DELETE http://localhost/posts/32
+DELETE http://localhost/api/posts/61
