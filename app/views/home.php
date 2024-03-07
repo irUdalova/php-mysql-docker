@@ -6,22 +6,27 @@ function formatDate($date) {
   $dateFormated = date("d M Y", $time);
   return $dateFormated;
 }
+
+// var_dump($_SESSION['user_id'], "userID");
 ?>
 
-<h1>DISCOVER SOMETHING NEW</h1>
+<div class="main-page">
 
-<?php if (empty($posts)) : ?>
-  <p>There is no posts</p>
-<?php endif; ?>
+  <h1>DISCOVER SOMETHING NEW</h1>
 
-<div class="posts">
+  <?php if (empty($posts)) : ?>
+    <p>There is no posts</p>
+  <?php endif; ?>
 
-  <?php foreach ($posts as $post) : ?>
-    <div class="post">
-      <h2 class="title"><?php echo $post['title']; ?> </h2>
-      <p><?php echo formatDate($post['date_created']); ?> </p>
-      <p><?php echo $post['body']; ?> </p>
-    </div>
-  <?php endforeach; ?>
+  <div class="posts">
 
+    <?php foreach ($posts as $post) : ?>
+      <div class="post">
+        <h2 class="title"><?php echo $post['title']; ?> </h2>
+        <p><?php echo formatDate($post['date_created']); ?> </p>
+        <p><?php echo $post['body']; ?> </p>
+      </div>
+    <?php endforeach; ?>
+
+  </div>
 </div>

@@ -14,7 +14,14 @@ include_once './api/controllers/PostUpdateController.php';
 include_once './api/controllers/PostDeleteController.php';
 
 include_once './app/controllers/HomePageController.php';
-include_once './app/controllers/MyNotesPageController.php';
+include_once './app/controllers/LoginPageController.php';
+include_once './app/controllers/SignupPageController.php';
+include_once './app/controllers/LogoutController.php';
+
+include_once './app/controllers/ProfileTabController.php';
+include_once './app/controllers/MyPostsTabController.php';
+include_once './app/controllers/CreatePostTabController.php';
+include_once './app/controllers/FavouritesTabController.php';
 
 $readAll = new PostReadAllController;
 $create = new PostCreateController;
@@ -23,7 +30,15 @@ $update = new PostUpdateController;
 $delete = new PostDeleteController;
 
 $appHome = new HomePageController;
-$appMyNotes = new MyNotesPageController;
+$appLogin = new LoginPageController;
+$appSignup = new SignupPageController;
+$appLogout = new LogoutController;
+
+$profileTab = new ProfileTabController;
+$myPostsTab = new MyPostsTabController;
+$createTab = new CreatePostTabController;
+$favouritesTab = new FavouritesTabController;
+
 
 RouterControllersRegistry::add($readAll);
 RouterControllersRegistry::add($create);
@@ -33,7 +48,14 @@ RouterControllersRegistry::add($delete);
 
 
 RouterControllersRegistry::add($appHome);
-RouterControllersRegistry::add($appMyNotes);
+RouterControllersRegistry::add($appLogin);
+RouterControllersRegistry::add($appSignup);
+RouterControllersRegistry::add($appLogout);
+
+RouterControllersRegistry::add($profileTab);
+RouterControllersRegistry::add($myPostsTab);
+RouterControllersRegistry::add($createTab);
+RouterControllersRegistry::add($favouritesTab);
 
 if (RouterControllersRegistry::canHandle()) {
   RouterControllersRegistry::handle();

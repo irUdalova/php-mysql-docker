@@ -8,7 +8,7 @@ class RouterControllersRegistry {
 
   public static function getControllers() {
     var_dump(self::$controllers);
-    // return self::$controllers;
+    // return self::$controllers;s
   }
 
   public static function canHandle() {

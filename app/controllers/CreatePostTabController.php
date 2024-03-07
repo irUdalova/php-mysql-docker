@@ -3,27 +3,34 @@
 include_once ROOT_DIR . '/models/PostsModel.php';
 
 
-class MyNotesPageController {
+class CreatePostTabController {
 
   public function canHandle() {
     $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET" || $_SERVER["REQUEST_METHOD"] === "POST";
-    if ($isMethodSupported && $_SERVER["REQUEST_URI"] === '/mynotes') {
+    if ($isMethodSupported && $_SERVER["REQUEST_URI"] === '/myprofile/create') {
       return true;
     }
     return false;
   }
 
   public function handle() {
+    session_start();
 
     $params = [
       'titleErr' => '',
       'bodyErr' => '',
       'succes' => false,
-      'message' => ''
+      'message' => '',
+      'userID' => $_SESSION["user_id"] ?? NULL
     ];
 
     if ($_SERVER["REQUEST_METHOD"] === "GET") {
-      echo $this->renderView('myNotes', $params);
+
+      if (!$params['userID']) {
+        header("Location: /");
+        exit;
+      }
+      echo $this->renderView('myProfile', $params);
     }
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -48,7 +55,7 @@ class MyNotesPageController {
           $params['message'] = "Something went wrong, the post was not created";
         }
       }
-      echo $this->renderView('myNotes', $params);
+      echo $this->renderView('myProfile', $params);
     }
   }
 
@@ -65,10 +72,16 @@ class MyNotesPageController {
   }
 
   protected function renderOnlyView($view, $params) {
-    //extract variable $params->$posts
-    extract($params);
     ob_start();
     include_once ROOT_DIR . "/app/views/$view.php";
+    $viewTab = $this->renderActiveTab($params);
+    return str_replace('{{profile-content}}', $viewTab, ob_get_clean());
+  }
+
+  protected function renderActiveTab($params) {
+    extract($params);
+    ob_start();
+    include_once ROOT_DIR . "/app/views/profile-tabs/createPost.php";
     return ob_get_clean();
   }
 

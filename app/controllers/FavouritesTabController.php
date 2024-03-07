@@ -3,10 +3,11 @@
 include_once ROOT_DIR . '/models/PostsModel.php';
 
 
-class HomePageController {
+class FavouritesTabController {
 
   public function canHandle() {
-    if ($_SERVER["REQUEST_METHOD"] === "GET" && $_SERVER["REQUEST_URI"] === '/') {
+    $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET";
+    if ($isMethodSupported && $_SERVER["REQUEST_URI"] === '/myprofile/favourites') {
       return true;
     }
     return false;
@@ -14,21 +15,21 @@ class HomePageController {
 
   public function handle() {
     session_start();
-    // var_dump($_SESSION, " session");
-    //Instantiate post object
-    $post = new PostsModel();
-
-    //Post query
-    $posts = $post->getAll();
+    $user = new UsersModel;
 
     $params = [
-      'posts' => $posts,
-      'userID' => $_SESSION["user_id"] ?? NULL
+      'userID' => $_SESSION["user_id"] ?? NULL,
+      'userData' => [],
     ];
 
-    // var_dump($params['userID'], "user_ID");
+    if (!$params['userID']) {
+      header("Location: /");
+      exit;
+    }
 
-    echo $this->renderView('home', $params);
+    $params['userData'] = $user->getById($params['userID']);
+
+    echo $this->renderView('myProfile', $params);
   }
 
   public function renderView($view, $params = []) {
@@ -44,10 +45,16 @@ class HomePageController {
   }
 
   protected function renderOnlyView($view, $params) {
-    //extract variable $params->$posts
-    extract($params);
     ob_start();
     include_once ROOT_DIR . "/app/views/$view.php";
+    $viewTab = $this->renderActiveTab($params);
+    return str_replace('{{profile-content}}', $viewTab, ob_get_clean());
+  }
+
+  protected function renderActiveTab($params) {
+    extract($params);
+    ob_start();
+    include_once ROOT_DIR . "/app/views/profile-tabs/favourites.php";
     return ob_get_clean();
   }
 }
