@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 //define root dir path variable
 define("ROOT_DIR", __DIR__);
+define("STATIC_URL", '/');
 
 include_once './router/RouterControllersRegistry.php';
 
@@ -18,10 +19,15 @@ include_once './app/controllers/LoginPageController.php';
 include_once './app/controllers/SignupPageController.php';
 include_once './app/controllers/LogoutController.php';
 
-include_once './app/controllers/ProfileTabController.php';
-include_once './app/controllers/MyPostsTabController.php';
-include_once './app/controllers/CreatePostTabController.php';
-include_once './app/controllers/FavouritesTabController.php';
+include_once './app/controllers/MyPostsPageController.php';
+include_once './app/controllers/PostCreatePageController.php';
+include_once './app/controllers/FavouritesPageController.php';
+include_once './app/controllers/ProfilePageController.php';
+
+include_once './app/controllers/ProfileEditPageController.php';
+include_once './app/controllers/ProfileImgDeleteController.php';
+include_once './app/controllers/ProfileImgUpdateController.php';
+include_once './app/controllers/ProfileChangePswPageController.php';
 
 $readAll = new PostReadAllController;
 $create = new PostCreateController;
@@ -34,10 +40,15 @@ $appLogin = new LoginPageController;
 $appSignup = new SignupPageController;
 $appLogout = new LogoutController;
 
-$profileTab = new ProfileTabController;
-$myPostsTab = new MyPostsTabController;
-$createTab = new CreatePostTabController;
-$favouritesTab = new FavouritesTabController;
+$appMyPosts = new MyPostsPageController;
+$appPostCreate = new PostCreatePageController;
+$appFavourites = new FavouritesPageController;
+$appProfile = new ProfilePageController;
+
+$appProfileEdit = new ProfileEditPageController;
+$appProfileImgDel = new ProfileImgDeleteController;
+$appProfileImgUpd = new ProfileImgUpdateController;
+$appProfileChangePsw = new ProfileChangePswPageController;
 
 
 RouterControllersRegistry::add($readAll);
@@ -46,16 +57,20 @@ RouterControllersRegistry::add($readSingle);
 RouterControllersRegistry::add($update);
 RouterControllersRegistry::add($delete);
 
-
 RouterControllersRegistry::add($appHome);
 RouterControllersRegistry::add($appLogin);
 RouterControllersRegistry::add($appSignup);
 RouterControllersRegistry::add($appLogout);
 
-RouterControllersRegistry::add($profileTab);
-RouterControllersRegistry::add($myPostsTab);
-RouterControllersRegistry::add($createTab);
-RouterControllersRegistry::add($favouritesTab);
+RouterControllersRegistry::add($appMyPosts);
+RouterControllersRegistry::add($appPostCreate);
+RouterControllersRegistry::add($appFavourites);
+RouterControllersRegistry::add($appProfile);
+
+RouterControllersRegistry::add($appProfileEdit);
+RouterControllersRegistry::add($appProfileImgDel);
+RouterControllersRegistry::add($appProfileImgUpd);
+RouterControllersRegistry::add($appProfileChangePsw);
 
 if (RouterControllersRegistry::canHandle()) {
   RouterControllersRegistry::handle();

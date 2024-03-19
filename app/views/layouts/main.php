@@ -1,5 +1,11 @@
 <?php
-$isSession = $_SESSION["user_id"] ?? NULL;
+$userId = $_SESSION["user_id"] ?? NULL;
+// for profile image in the nav-bar
+// if ($userId) {
+//   include_once ROOT_DIR . '/models/UsersModel.php';
+//   $user = new UsersModel;
+//   $userData = $user->getById($userId);
+// }
 ?>
 
 
@@ -28,25 +34,28 @@ $isSession = $_SESSION["user_id"] ?? NULL;
         <nav class="nav">
           <ul class="nav-list">
             <li class="nav-item"><a href="/" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "/") ? "active" : null; ?>">HOME</a></li>
-            <li class="nav-item"><a href="" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "") ? "active" : null; ?>">ABOUT</a></li>
 
-            <?php if (!$isSession) : ?>
+            <?php if (!$userId) : ?>
               <li class="nav-item nav-login"><a href="/login" class="nav-link  <?php echo ($_SERVER["REQUEST_URI"] === "/login") ? "active" : null; ?>">LOG IN</a></li>
               <li class=" nav-item"><a href="/signup" class="nav-link signup">SIGN UP</a></li>
             <?php endif; ?>
 
-            <?php if ($isSession) : ?>
-              <li class="nav-item nav-profile"><a href="/myprofile/profile" class="nav-link <?php echo (explode("/", $_SERVER['REQUEST_URI'])[1] === "myprofile") ? "active" : null; ?>">MY PROFILE</a></li>
+            <?php if ($userId) : ?>
+              <li class="nav-item"><a href="/myposts" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "/myposts") ? "active" : null; ?>">MY POSTS</a></li>
+              <li class="nav-item"><a href="/favourites" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "/favourites") ? "active" : null; ?>">FAVOURITES</a></li>
+              <li class="nav-item nav-profile"><a href="/profile" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "/profile") ? "active" : null; ?>">
+                  <!-- <div class="profile-image small">
+                    <img class="avatar-img" src=<?
+                                                // php echo $userData['profile_img'] ?? "/public/img/user-default.png" 
+                                                ?> alt="Profile image" width="40" height="40">
+                  </div> -->
+                  PROFILE
+                </a></li>
               <li class="nav-item"><a href="/logout" class="nav-link signout">LOG OUT</a></li>
             <?php endif; ?>
 
           </ul>
         </nav>
-
-        <!-- <div class="login-container">
-          <li class="nav-item"><a href="" class="nav-link login">LOG IN</a></li>
-          <li class="nav-item"><a href="" class="nav-link signup">SIGN UP</a></li>
-        </div> -->
 
       </div>
     </div>
@@ -67,7 +76,7 @@ $isSession = $_SESSION["user_id"] ?? NULL;
         <p>©</p>
         <p>2024</p>
         <a class="github-link" href="https://github.com/irUdalova">
-          <p>github</p>
+          <p>irUdalova</p>
         </a>
       </div>
 

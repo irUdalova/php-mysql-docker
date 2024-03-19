@@ -3,11 +3,11 @@
 include_once ROOT_DIR . '/models/UsersModel.php';
 
 
-class ProfileTabController {
+class ProfilePageController {
 
   public function canHandle() {
     $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET";
-    if ($isMethodSupported && $_SERVER["REQUEST_URI"] === '/myprofile/profile') {
+    if ($isMethodSupported && $_SERVER["REQUEST_URI"] === '/profile') {
       return true;
     }
     return false;
@@ -29,7 +29,7 @@ class ProfileTabController {
 
     $params['userData'] = $user->getById($params['userID']);
 
-    echo $this->renderView('myProfile', $params);
+    echo $this->renderView('profile', $params);
   }
 
   public function renderView($view, $params = []) {
@@ -45,16 +45,10 @@ class ProfileTabController {
   }
 
   protected function renderOnlyView($view, $params) {
-    ob_start();
-    include_once ROOT_DIR . "/app/views/$view.php";
-    $viewTab = $this->renderActiveTab($params);
-    return str_replace('{{profile-content}}', $viewTab, ob_get_clean());
-  }
-
-  protected function renderActiveTab($params) {
+    //extract variable $params
     extract($params);
     ob_start();
-    include_once ROOT_DIR . "/app/views/profile-tabs/profile.php";
+    include_once ROOT_DIR . "/app/views/$view.php";
     return ob_get_clean();
   }
 }

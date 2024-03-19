@@ -1,6 +1,6 @@
 <?php
 
-include_once ROOT_DIR . '/models/PostsModel.php';
+// include_once ROOT_DIR . '/models/PostsModel.php';
 
 
 class LogoutController {
@@ -14,6 +14,7 @@ class LogoutController {
 
   public function handle() {
     session_start();
+    session_unset();
     session_destroy();
     header('Location: ' . $_SERVER['HTTP_REFERER']); // go to previous page
     exit;

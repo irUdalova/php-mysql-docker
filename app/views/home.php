@@ -1,11 +1,13 @@
 <?php
 //variable $params->$posts from the HomePageController->renderOnlyView is available here
 
-function formatDate($date) {
-  $time = strtotime($date);
-  $dateFormated = date("d M Y", $time);
-  return $dateFormated;
-}
+// function formatDate($date) {
+//   $time = strtotime($date);
+//   $dateFormated = date("d M Y", $time);
+//   return $dateFormated;
+// }
+
+include_once ROOT_DIR . '/app/helpers/functions.php';
 
 // var_dump($_SESSION['user_id'], "userID");
 ?>

@@ -3,11 +3,11 @@
 include_once ROOT_DIR . '/models/PostsModel.php';
 
 
-class MyPostsTabController {
+class MyPostsPageController {
 
   public function canHandle() {
     $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET";
-    if ($isMethodSupported && $_SERVER["REQUEST_URI"] === '/myprofile/my-posts') {
+    if ($isMethodSupported && $_SERVER["REQUEST_URI"] === '/myposts') {
       return true;
     }
     return false;
@@ -29,7 +29,7 @@ class MyPostsTabController {
 
     $params['userData'] = $user->getById($params['userID']);
 
-    echo $this->renderView('myProfile', $params);
+    echo $this->renderView('myPosts', $params);
   }
 
   public function renderView($view, $params = []) {
@@ -45,16 +45,10 @@ class MyPostsTabController {
   }
 
   protected function renderOnlyView($view, $params) {
-    ob_start();
-    include_once ROOT_DIR . "/app/views/$view.php";
-    $viewTab = $this->renderActiveTab($params);
-    return str_replace('{{profile-content}}', $viewTab, ob_get_clean());
-  }
-
-  protected function renderActiveTab($params) {
+    //extract variable $params
     extract($params);
     ob_start();
-    include_once ROOT_DIR . "/app/views/profile-tabs/myPosts.php";
+    include_once ROOT_DIR . "/app/views/$view.php";
     return ob_get_clean();
   }
 }

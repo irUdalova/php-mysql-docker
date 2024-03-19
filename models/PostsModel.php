@@ -7,7 +7,7 @@ require_once ROOT_DIR . '/config/DatabaseConnector.php';
 class PostsModel {
   //DB vars
   private $conn;
-  private $table = "php_docker_table";
+  private $table = "posts";
 
   //Constructor with DB
   public function __construct() {
