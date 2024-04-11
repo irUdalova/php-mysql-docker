@@ -1,6 +1,7 @@
 <?php
 
 include_once ROOT_DIR . '/models/UsersModel.php';
+include_once ROOT_DIR . '/models/WordsModel.php';
 
 
 class ProfilePageController {
@@ -16,10 +17,12 @@ class ProfilePageController {
   public function handle() {
     session_start();
     $user = new UsersModel;
+    $word = new WordsModel();
 
     $params = [
       'userID' => $_SESSION["user_id"] ?? NULL,
       'userData' => [],
+      'postsCount' => ''
     ];
 
     if (!$params['userID']) {
@@ -28,6 +31,7 @@ class ProfilePageController {
     }
 
     $params['userData'] = $user->getById($params['userID']);
+    $params['postsCount'] = count($word->getByUserId($params['userID']));
 
     echo $this->renderView('profile', $params);
   }

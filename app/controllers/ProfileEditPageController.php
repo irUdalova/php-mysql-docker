@@ -1,6 +1,7 @@
 <?php
 
 include_once ROOT_DIR . '/models/UsersModel.php';
+include_once ROOT_DIR . '/models/WordsModel.php';
 
 
 class ProfileEditPageController {
@@ -16,13 +17,15 @@ class ProfileEditPageController {
   public function handle() {
     session_start();
     $user = new UsersModel;
+    $word = new WordsModel();
 
     $params = [
       'userID' => $_SESSION["user_id"] ?? NULL,
       'userData' => [],
       'errors' => [],
       'succes' => '',
-      'message' => ''
+      'message' => '',
+      'postsCount' => ''
     ];
 
     if (!$params['userID']) {
@@ -31,6 +34,7 @@ class ProfileEditPageController {
     }
 
     $params['userData'] = $user->getById($params['userID']);
+    $params['postsCount'] = count($word->getByUserId($params['userID']));
 
     if ($_SERVER["REQUEST_METHOD"] === "GET") {
       echo $this->renderView('profileEdit', $params);

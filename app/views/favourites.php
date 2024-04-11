@@ -1,1 +1,1 @@
-<p>favouritesTabController</p>
+<p>favouritesController</p>

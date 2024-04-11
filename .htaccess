@@ -5,6 +5,7 @@ RewriteCond %{REQUEST_URI} !\.php$ [NC]
 RewriteCond %{REQUEST_URI} !\.css$ [NC]
 RewriteCond %{REQUEST_URI} !\.jpg$ [NC]
 RewriteCond %{REQUEST_URI} !\.jpeg$ [NC]
+RewriteCond %{REQUEST_URI} !\.js$ [NC]
 RewriteCond %{QUERY_STRING} !^page
 
 RewriteRule . index.php

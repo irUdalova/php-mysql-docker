@@ -1,13 +1,22 @@
 <?php
 
 include_once ROOT_DIR . '/models/WordsModel.php';
-include_once ROOT_DIR . '/models/TagsModel.php';
 
 
-class HomePageController {
+class PostPageController {
+  public $postID;
+
+  public function __construct() {
+    $parts = explode("/", $_SERVER['REQUEST_URI']);
+    $idURI = $parts[2] ?? null;
+    $this->postID = filter_var($idURI, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  }
 
   public function canHandle() {
-    if ($_SERVER["REQUEST_METHOD"] === "GET" && $_SERVER["REQUEST_URI"] === '/') {
+    $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET";
+    $request = $_SERVER["REQUEST_URI"];
+    $regex = '~^/posts/[0-9]+$~i';
+    if ($isMethodSupported && preg_match($regex, $request)) {
       return true;
     }
     return false;
@@ -18,12 +27,13 @@ class HomePageController {
     $word = new WordsModel();
 
     $params = [
-      'words' => [],
+      'wordData' => [],
       'userID' => $_SESSION["user_id"] ?? NULL
     ];
 
-    $params['words'] = $word->getAll();
-    echo $this->renderView('home', $params);
+    $params['wordData'] = $word->getWordById($this->postID);
+
+    echo $this->renderView('post', $params);
   }
 
   public function renderView($view, $params = []) {
@@ -39,7 +49,7 @@ class HomePageController {
   }
 
   protected function renderOnlyView($view, $params) {
-    //extract variable $params->$posts
+    //extract variable $params
     extract($params);
     ob_start();
     include_once ROOT_DIR . "/app/views/$view.php";

@@ -1,13 +1,23 @@
 <?php
 
 include_once ROOT_DIR . '/models/WordsModel.php';
+include_once ROOT_DIR . '/models/UsersModel.php';
 
 
-class MyPostsPageController {
+class UserProfilePageController {
+  public $userID;
+
+  public function __construct() {
+    $parts = explode("/", $_SERVER['REQUEST_URI']);
+    $idURI = $parts[3] ?? null;
+    $this->userID = filter_var($idURI, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  }
 
   public function canHandle() {
     $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET";
-    if ($isMethodSupported && $_SERVER["REQUEST_URI"] === '/myposts') {
+    $request = $_SERVER["REQUEST_URI"];
+    $regex = '~^/profile/user/[0-9]+$~i';
+    if ($isMethodSupported && preg_match($regex, $request)) {
       return true;
     }
     return false;
@@ -16,20 +26,19 @@ class MyPostsPageController {
   public function handle() {
     session_start();
     $word = new WordsModel();
+    $user = new UsersModel();
 
     $params = [
       'words' => [],
-      'userID' => $_SESSION["user_id"] ?? NULL
+      'userData' => [],
+      'postsCount' => ''
     ];
 
-    if (!$params['userID']) {
-      header("Location: /");
-      exit;
-    }
+    $params['words'] = $word->getByUserId($this->userID);
+    $params['userData'] = $user->getById($this->userID);
+    $params['postsCount'] = count($params['words']);
 
-    $params['words'] = $word->getByUserId($params['userID']);
-
-    echo $this->renderView('myPosts', $params);
+    echo $this->renderView('userProfile', $params);
   }
 
   public function renderView($view, $params = []) {

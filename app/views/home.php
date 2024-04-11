@@ -1,32 +1,57 @@
 <?php
-//variable $params->$posts from the HomePageController->renderOnlyView is available here
-
-// function formatDate($date) {
-//   $time = strtotime($date);
-//   $dateFormated = date("d M Y", $time);
-//   return $dateFormated;
-// }
 
 include_once ROOT_DIR . '/app/helpers/functions.php';
-
-// var_dump($_SESSION['user_id'], "userID");
 ?>
 
 <div class="main-page">
 
-  <h1>DISCOVER SOMETHING NEW</h1>
+  <?php if (empty($activeTag)) : ?>
+    <h1>DISCOVER SOMETHING NEW</h1>
+  <?php endif; ?>
 
-  <?php if (empty($posts)) : ?>
+  <?php if (!empty($activeTag)) : ?>
+    <h1>RESULTS FOR TAG <span class="tag-title"><?= $activeTag['tag'] ?></span></h1>
+  <?php endif; ?>
+
+  <?php if (empty($words)) : ?>
     <p>There is no posts</p>
   <?php endif; ?>
 
   <div class="posts">
 
-    <?php foreach ($posts as $post) : ?>
+    <?php foreach ($words as $word) : ?>
       <div class="post">
-        <h2 class="title"><?php echo $post['title']; ?> </h2>
-        <p><?php echo formatDate($post['date_created']); ?> </p>
-        <p><?php echo $post['body']; ?> </p>
+
+        <a class="post-link" href="/posts/<?= $word['word_id']; ?>">
+          <h2 class="title"><?php echo $word['word']; ?> </h2>
+          <p class="post-body"><?php echo $word['definition']; ?> </p>
+        </a>
+
+        <div class="post-info-wrap">
+
+          <div class="post-tags-container">
+            <?php foreach ($word['tags'] as $tag) : ?>
+              <a class="post-tag-link <?= $activeTag && $activeTag['id'] === $tag['tag_id'] ? "active" : NULL ?>" href=<?= "/tags/" . $tag['tag_id'] ?>> <?= $tag['tag'] ?></a>
+            <?php endforeach; ?>
+          </div>
+
+          <div class=post-info>
+
+            <p class="post-date"><?php echo formatDate($word['word_date_created']); ?> </p>
+            <div class="post-user-data">
+
+              <p class="post-user-name">Added by </br> <?php echo $word['name']; ?> </p>
+
+              <a class="user-profile-link" href=<?= $userID === $word['user_id'] ? "/profile" : "/profile/user/" . $word['user_id'] ?>>
+                <div class="profile-image small">
+                  <img class="avatar-img" src=<?php echo $word['profile_img'] ? STATIC_URL . $word['profile_img'] : "/public/img/user-default.png" ?> alt="Profile image" width="40" height="40">
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+
       </div>
     <?php endforeach; ?>
 

@@ -29,6 +29,13 @@ include_once './app/controllers/ProfileImgDeleteController.php';
 include_once './app/controllers/ProfileImgUpdateController.php';
 include_once './app/controllers/ProfileChangePswPageController.php';
 
+include_once './app/controllers/UserProfilePageController.php';
+
+include_once './app/controllers/PostPageController.php';
+include_once './app/controllers/PostEditPageController.php';
+include_once './app/controllers/PostDeletePageController.php';
+include_once './app/controllers/TagPageController.php';
+
 $readAll = new PostReadAllController;
 $create = new PostCreateController;
 $readSingle = new PostReadSingleController;
@@ -49,6 +56,13 @@ $appProfileEdit = new ProfileEditPageController;
 $appProfileImgDel = new ProfileImgDeleteController;
 $appProfileImgUpd = new ProfileImgUpdateController;
 $appProfileChangePsw = new ProfileChangePswPageController;
+
+$appUserProfile = new UserProfilePageController;
+
+$appPost = new PostPageController;
+$appPostEdit = new PostEditPageController;
+$appPostDelete = new PostDeletePageController;
+$appTag = new TagPageController;
 
 
 RouterControllersRegistry::add($readAll);
@@ -71,6 +85,13 @@ RouterControllersRegistry::add($appProfileEdit);
 RouterControllersRegistry::add($appProfileImgDel);
 RouterControllersRegistry::add($appProfileImgUpd);
 RouterControllersRegistry::add($appProfileChangePsw);
+
+RouterControllersRegistry::add($appUserProfile);
+
+RouterControllersRegistry::add($appPost);
+RouterControllersRegistry::add($appPostEdit);
+RouterControllersRegistry::add($appPostDelete);
+RouterControllersRegistry::add($appTag);
 
 if (RouterControllersRegistry::canHandle()) {
   RouterControllersRegistry::handle();

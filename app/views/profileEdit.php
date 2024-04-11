@@ -68,12 +68,12 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
 
   <div class="user-statistic-bar">
     <div class="stat-item-wrap">
-      <p class="stat-item"><span class="material-symbols-outlined">assignment_ind</span>Join sinse</p>
+      <p class="stat-item"><span class="material-symbols-outlined">assignment_ind</span>Member sinse</p>
       <p class="stat-item-num"><?php echo formatDate($userData['date_created']); ?></p>
     </div>
     <div class="stat-item-wrap">
       <p class="stat-item"><span class="material-symbols-outlined">note_stack</span>Posts</p>
-      <p class="stat-item-num">0</p>
+      <p class="stat-item-num"><?php echo $postsCount ?></p>
     </div>
     <div class="stat-item-wrap">
       <p class="stat-item"><span class="material-symbols-outlined">comment</span>Comments </p>

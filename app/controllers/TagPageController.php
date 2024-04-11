@@ -4,10 +4,20 @@ include_once ROOT_DIR . '/models/WordsModel.php';
 include_once ROOT_DIR . '/models/TagsModel.php';
 
 
-class HomePageController {
+class TagPageController {
+  public $tagID;
+
+  public function __construct() {
+    $parts = explode("/", $_SERVER['REQUEST_URI']);
+    $idURI = $parts[2] ?? null;
+    $this->tagID = filter_var($idURI, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  }
 
   public function canHandle() {
-    if ($_SERVER["REQUEST_METHOD"] === "GET" && $_SERVER["REQUEST_URI"] === '/') {
+    $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET";
+    $request = $_SERVER["REQUEST_URI"];
+    $regex = '~^/tags/[0-9]+$~i';
+    if ($isMethodSupported && preg_match($regex, $request)) {
       return true;
     }
     return false;
@@ -16,13 +26,17 @@ class HomePageController {
   public function handle() {
     session_start();
     $word = new WordsModel();
+    $tag = new TagsModel();
 
     $params = [
       'words' => [],
-      'userID' => $_SESSION["user_id"] ?? NULL
+      'userID' => $_SESSION["user_id"] ?? NULL,
+      'activeTag' => []
     ];
 
-    $params['words'] = $word->getAll();
+    $params['words'] = $word->getByTagId($this->tagID);
+    $params['activeTag'] = $tag->getTagById($this->tagID);
+
     echo $this->renderView('home', $params);
   }
 

@@ -1,9 +1,10 @@
 <?php
 
 include_once ROOT_DIR . '/models/PostsModel.php';
+include_once ROOT_DIR . '/app/controllers/AuthorisedController.php';
 
 
-class FavouritesPageController {
+class FavouritesPageController extends AuthorisedController {
 
   public function canHandle() {
     $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET";
@@ -14,20 +15,14 @@ class FavouritesPageController {
   }
 
   public function handle() {
-    session_start();
+    $userID = $this->getAuthUserId();
     $user = new UsersModel;
 
     $params = [
-      'userID' => $_SESSION["user_id"] ?? NULL,
       'userData' => [],
     ];
 
-    if (!$params['userID']) {
-      header("Location: /");
-      exit;
-    }
-
-    $params['userData'] = $user->getById($params['userID']);
+    $params['userData'] = $user->getById($userID);
 
     echo $this->renderView('favourites', $params);
   }

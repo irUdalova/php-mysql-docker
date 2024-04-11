@@ -5,11 +5,20 @@ include_once ROOT_DIR . '/models/TagsModel.php';
 include_once ROOT_DIR . '/app/controllers/AuthorisedController.php';
 
 
-class PostCreatePageController extends AuthorisedController {
+class PostEditPageController extends AuthorisedController {
+  public $postID;
+
+  public function __construct() {
+    $parts = explode("/", $_SERVER['REQUEST_URI']);
+    $idURI = $parts[2] ?? null;
+    $this->postID = filter_var($idURI, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  }
 
   public function canHandle() {
     $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET" || $_SERVER["REQUEST_METHOD"] === "POST";
-    if ($isMethodSupported && $_SERVER["REQUEST_URI"] === '/post/create') {
+    $request = $_SERVER["REQUEST_URI"];
+    $regex = '~^/posts/[0-9]+/edit$~i';
+    if ($isMethodSupported && preg_match($regex, $request)) {
       return true;
     }
     return false;
@@ -17,21 +26,41 @@ class PostCreatePageController extends AuthorisedController {
 
   public function handle() {
     $userID = $this->getAuthUserId();
+    $word = new WordsModel();
 
     $params = [
       'errors' => [],
+      'wordData' => [],
       'formData' => [],
       'succes' => '',
       'message' => '',
     ];
 
+    $params['wordData'] = $word->getWordById($this->postID);
+    $params['wordData']['tagsStr'] = $this->tagsToStr($params['wordData']['tags']);
+
     if ($_SERVER["REQUEST_METHOD"] === "GET") {
-      echo $this->renderView('postCreate', $params);
+
+      $params['formData'] = $params['wordData'];
+
+      if ($params['wordData']['user_id'] !== $userID) {
+        http_response_code(403);
+        exit;
+      }
+      echo $this->renderView('postEdit', $params);
     }
+
+
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
+      if (isset($_POST['cancel'])) {
+        header("Location: /myposts");
+        exit;
+      }
+
       $postData = $this->getPostData();
+
       $params['errors'] = $this->createPostFormValidation($postData);
       $isErrors = count(array_filter($params['errors']));
 
@@ -43,16 +72,28 @@ class PostCreatePageController extends AuthorisedController {
         }
 
         $word = new WordsModel();
-        $wordName = strtolower(trim($postData['word']));
-        $wordDefin = strtolower(trim($postData['definition']));
-        $wordEx = ucfirst(strtolower(trim($postData['example']))) . '.';
+        $wordName = strtolower(trim($postData['word'], '.'));
+        $wordDefin = strtolower(trim($postData['definition'], '.'));
+        $wordEx = ucfirst(strtolower(trim($postData['example'], '.'))) . '.';
 
-        $wordId = $word->create($wordName, $wordDefin, $wordEx, $userID);
-        if ($wordId) {
+
+        if ($word->update($wordName, $wordDefin, $wordEx, $this->postID)) {
           if ($tagsProcessed) {
             $tagModel = new TagsModel();
-            foreach ($tagsProcessed as $tag) {
-              $tagModel->createWordTag($wordId, $tag['id']);
+
+            if ($tagModel->deleteWordTags($this->postID)) {
+
+              foreach ($params['wordData']['tags'] as $tag) {
+                // find words with this tag
+                $tagWords = $word->getByTagId($tag['tag_id']);
+                if (!$tagWords) {
+                  $tagModel->deleteTag($tag['tag_id']);
+                }
+              }
+
+              foreach ($tagsProcessed as $tag) {
+                $tagModel->createWordTag($this->postID, $tag['id']);
+              }
             }
           }
           $params['succes'] = true;
@@ -68,10 +109,11 @@ class PostCreatePageController extends AuthorisedController {
         $params['formData']['word'] = $postData['word'];
         $params['formData']['definition'] = $postData['definition'];
         $params['formData']['example'] = $postData['example'];
-        $params['formData']['tags'] = $postData['tags'] ? implode(',', $postData['tags']) : '';
+        $params['formData']['tags'] = $postData['tags'];
+        $params['formData']['tagsStr'] = $postData['tags'] ? implode(',', $postData['tags']) : '';
       }
 
-      echo $this->renderView('postCreate', $params);
+      echo $this->renderView('postEdit', $params);
     }
   }
 
@@ -83,13 +125,11 @@ class PostCreatePageController extends AuthorisedController {
 
     if ($tagsPost) {
       foreach ($tagsPost as $key => $tag) {
-        //trim tags from post data
-        $tagTrim = strtolower(trim($tag));
-        $keyTag = array_search($tagTrim, array_column($tagsDB, 'tag'));
+        $keyTag = array_search($tag, array_column($tagsDB, 'tag'));
         if ($keyTag !== false) {
           $tagsProcessed[] = $tagsDB[$keyTag];
         } else {
-          $newTagId = $tagModel->createTag($tagTrim);
+          $newTagId = $tagModel->createTag($tag);
           if ($newTagId) {
             $tagsProcessed[] = $tagModel->getTagById($newTagId);
           } else {
@@ -99,7 +139,17 @@ class PostCreatePageController extends AuthorisedController {
         }
       }
     }
+
     return $tagsProcessed;
+  }
+
+  public function tagsToStr($tags) {
+    if ($tags) {
+      $tagsArr = array_column($tags, 'tag');
+      return implode(',', $tagsArr);
+    } else {
+      return '';
+    }
   }
 
   public function renderView($view, $params = []) {
@@ -139,14 +189,14 @@ class PostCreatePageController extends AuthorisedController {
     return $body;
   }
 
-
   protected function createPostFormValidation($data) {
+
     $wordModel = new WordsModel;
-    $wordName = strtolower(trim($data['word']));
-    $wordDB = $wordModel->getByWord($wordName);
+    $wordPostName = strtolower(trim($data['word']));
+
+    $wordDB = $wordModel->isWordTaken($wordPostName, $this->postID);
 
 
-    // $regWord = "/[a-zа-яёЁЇїІіЄєҐґ&ʼ\']+/i";
     $regAllSymbols = "/[\s!\"#$%&'()*+,-.\/\:\;<=>?@[\]^_`{|}~\d]/i";
     $regSymbols = "/[&'()+\/<=>[\]^_`{|}~\d]/i";
 
@@ -154,7 +204,7 @@ class PostCreatePageController extends AuthorisedController {
 
     if (empty($data['word'])) {
       $errors['word'] = 'This field is required';
-    } elseif (preg_match($regAllSymbols, $wordName)) {
+    } elseif (preg_match($regAllSymbols, $wordPostName)) {
       $errors['word'] =  'This field contains characters that are not allowed';
     } elseif (!empty($wordDB)) {
       $errors['word'] = 'Oops, seems like this word is already exist';
@@ -169,7 +219,7 @@ class PostCreatePageController extends AuthorisedController {
 
     if (empty($data['example'])) {
       $errors['example'] = 'This field is required';
-    } elseif (preg_match($regSymbols, $$data['example'])) {
+    } elseif (preg_match($regSymbols, $data['example'])) {
       $errors['example'] =  'This field contains characters that are not allowed';
     }
 

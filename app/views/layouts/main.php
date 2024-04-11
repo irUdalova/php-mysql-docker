@@ -18,6 +18,21 @@ $userId = $_SESSION["user_id"] ?? NULL;
   <title>MY PHP, MYSQL, MY LIFE</title>
   <link rel="stylesheet" href="/app/globals.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <!-- data from DB for js -->
+  <script>
+    <?php
+    function getTags() {
+      include_once ROOT_DIR . '/models/TagsModel.php';
+      $tagModel = new TagsModel();
+      return $tagModel->getAllTags();
+    } ?>
+
+    const application = {
+      tags: <?php echo json_encode(getTags()); ?>
+    }
+  </script>
+
 </head>
 
 <body>
@@ -84,6 +99,7 @@ $userId = $_SESSION["user_id"] ?? NULL;
 
   </footer>
   </div>
+  <script type="module" src="/js/tag.js"></script>
 </body>
 
 </html>
