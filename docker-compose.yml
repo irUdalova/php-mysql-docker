@@ -1,4 +1,4 @@
-version: "3.8"
+# version: "3.8" // obsolete in new docker Compose Specification
 services:
   www:
     build:

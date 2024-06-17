@@ -2,9 +2,17 @@
 
 declare(strict_types=1);
 
+$sortParams = array(
+  "new" => array("order" => "date_created", "order_type" => "DESC"),
+  "old" => array("order" => "date_created", "order_type" => "ASC"),
+  "AZ" => array("order" => "word", "order_type" => "ASC"),
+  "ZA" => array("order" => "word", "order_type" => "DESC")
+);
+
 //define root dir path variable
 define("ROOT_DIR", __DIR__);
 define("STATIC_URL", '/');
+define("SORT_PARAMS", $sortParams);
 
 include_once './router/RouterControllersRegistry.php';
 

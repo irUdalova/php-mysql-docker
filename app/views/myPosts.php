@@ -6,9 +6,13 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
 
   <!-- <h1>MY WORDS</h1> -->
 
-  <?php if (empty($words)) : ?>
-    <p>You did not add any words yet, maybe it is time to add new one?</p>
-  <?php endif; ?>
+  <?php if (empty($words)) {
+    if ($pagination['page'] > 1) { ?>
+      <p>There no words on this page</p>
+    <?php } else { ?>
+      <p>You did not add any words yet, maybe it is time to add new one?</p>
+    <?php } ?>
+  <?php } ?>
 
   <div class="posts">
 
@@ -59,4 +63,11 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
     <?php endforeach; ?>
 
   </div>
+
+  <?php if ($pagination['totalPages'] > 1) { ?>
+    <div class="pagination-wrap">
+      <?php include_once ROOT_DIR . '/app/views/pagination.php'; ?>
+    </div>
+  <?php } ?>
+
 </div>

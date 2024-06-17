@@ -20,9 +20,164 @@ class WordsModel {
   }
 
   //Get Words with tags
-  public function getAll() {
-    $query = "SELECT 
-    $this->tableWords.id AS word_id,
+  // public function getAll() {
+  //   $query = "SELECT 
+  //   $this->tableWords.id AS word_id,
+  //   $this->tableWords.word,
+  //   $this->tableWords.definition, 
+  //   $this->tableWords.example,
+  //   $this->tableWords.user_id,
+  //   $this->tableWords.date_created AS word_date_created,
+  //   $this->tableUsers.name,
+  //   $this->tableUsers.profile_img
+  //   FROM $this->tableWords
+  //   JOIN $this->tableUsers ON $this->tableWords.user_id = $this->tableUsers.id";
+
+  //   //Prepare the statment
+  //   $stmt = $this->conn->prepare($query);
+
+  //   //Execute query
+  //   $stmt->execute();
+
+  //   $result = $stmt->get_result();
+  //   $words = $result->fetch_all(MYSQLI_ASSOC);
+
+  //   return $this->addTags($words);
+  // }
+
+  // public function countAllWords() {
+  //   $query = "SELECT COUNT(id) as words_total FROM $this->tableWords";
+
+  //   //Prepare the statment
+  //   $stmt = $this->conn->prepare($query);
+
+  //   //Execute query
+  //   $stmt->execute();
+
+  //   $result = $stmt->get_result();
+
+  //   $wordsTotal = $result->fetch_array();
+
+  //   return $wordsTotal['words_total'];
+  // }
+
+
+  // public function countAllWords($search = '') {
+  //   $query = "SELECT COUNT(id) as words_total
+  //    FROM $this->tableWords 
+  //    WHERE $this->tableWords.word LIKE ?";
+
+  //   $searchSQL = '%' . $search . '%';
+
+  //   //Prepare the statment
+  //   $stmt = $this->conn->prepare($query);
+
+  //   $stmt->bind_param('s', $searchSQL);
+
+  //   //Execute query
+  //   $stmt->execute();
+
+  //   $result = $stmt->get_result();
+
+  //   $wordsTotal = $result->fetch_array();
+
+  //   return $wordsTotal['words_total'];
+  // }
+
+  public function countAllWords($search, $tags) {
+    // $query = "SELECT COUNT(id) as words_total
+    //  FROM $this->tableWords 
+    //  WHERE $this->tableWords.word LIKE ?";
+
+    // $searchSQL = '%' . $search . '%';
+
+    // //Prepare the statment
+    // $stmt = $this->conn->prepare($query);
+
+    // $stmt->bind_param('s', $searchSQL);
+
+    // //Execute query
+    // $stmt->execute();
+
+    // $result = $stmt->get_result();
+
+    // $wordsTotal = $result->fetch_array();
+
+
+    $params = [];
+
+    $query = "SELECT COUNT(DISTINCT $this->tableWords.id) AS words_total
+    FROM $this->tableWords 
+    JOIN $this->tableWordsTags ON $this->tableWords.id = $this->tableWordsTags.word_id";
+
+    //search params
+    if (strlen($search) > 0) {
+      $query .= " WHERE $this->tableWords.word LIKE ?";
+      $params[] = '%' . $search . '%';
+    }
+
+    //filter tags
+    if ($tags) {
+      foreach ($tags as $tag) {
+        $params[] = $tag['id'];
+      }
+      $filterParams = str_repeat('?,', count($tags) - 1) . '?';
+      $query .= " AND $this->tableWordsTags.tag_id IN ($filterParams)";
+    }
+
+    $result = $this->conn->execute_query($query, $params);
+
+    $wordsTotal = $result->fetch_array();
+
+    return $wordsTotal['words_total'];
+  }
+
+  public function countWordsByUserId($id) {
+    $query = "SELECT COUNT(id) as words_total FROM $this->tableWords WHERE $this->tableWords.user_id = ?";
+
+    //Prepare the statment
+    $stmt = $this->conn->prepare($query);
+
+    // Bind ID
+    $stmt->bind_param('i', $id);
+
+    //Execute query
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
+    $wordsTotal = $result->fetch_array();
+
+    return $wordsTotal['words_total'];
+  }
+
+  public function countWordsByTagId($id) {
+    $query = "SELECT COUNT(id) as words_total FROM $this->tableWordsTags WHERE $this->tableWordsTags.tag_id = ?";
+
+    //Prepare the statment
+    $stmt = $this->conn->prepare($query);
+
+    // Bind ID
+    $stmt->bind_param('i', $id);
+
+    //Execute query
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
+    $wordsTotal = $result->fetch_array();
+
+    return $wordsTotal['words_total'];
+  }
+
+
+  public function getAll($search, $tags, $order, $orderType, $start = 0, $perPage = 18446744073709551615) {
+    $orderDB = mysqli_escape_string($this->conn, $order);
+    $orderTypeDB = mysqli_escape_string($this->conn, $orderType);
+
+    $params = [];
+
+    $query = "SELECT DISTINCT $this->tableWords.id AS word_id,
     $this->tableWords.word,
     $this->tableWords.definition, 
     $this->tableWords.example,
@@ -31,15 +186,36 @@ class WordsModel {
     $this->tableUsers.name,
     $this->tableUsers.profile_img
     FROM $this->tableWords
-    JOIN $this->tableUsers ON $this->tableWords.user_id = $this->tableUsers.id";
+    JOIN $this->tableUsers ON $this->tableWords.user_id = $this->tableUsers.id
+    JOIN $this->tableWordsTags ON $this->tableWords.id = $this->tableWordsTags.word_id";
 
-    //Prepare the statment
-    $stmt = $this->conn->prepare($query);
 
-    //Execute query
-    $stmt->execute();
+    //search params
+    if (strlen($search) > 0) {
+      $query .= " WHERE $this->tableWords.word LIKE ?";
+      $params[] = '%' . $search . '%';
+    }
 
-    $result = $stmt->get_result();
+    //filter tags
+    if ($tags) {
+      foreach ($tags as $tag) {
+        $params[] = $tag['id'];
+      }
+      $filterParams = str_repeat('?,', count($tags) - 1) . '?';
+      $query .= " AND $this->tableWordsTags.tag_id IN ($filterParams)";
+    }
+
+    //sort params
+    $query .= " ORDER BY $this->tableWords.$orderDB $orderTypeDB";
+
+    //LIMIT for pagination
+    $query .= " LIMIT ?,?";
+    $params[] = $start;
+    $params[] = $perPage;
+
+
+    $result = $this->conn->execute_query($query, $params);
+
     $words = $result->fetch_all(MYSQLI_ASSOC);
 
     return $this->addTags($words);
@@ -54,7 +230,7 @@ class WordsModel {
   }
 
   // Get array of word by specific tag
-  public function getByTagId($id) {
+  public function getByTagId($id, $start = 0, $perPage = 18446744073709551615) {
     $query = "SELECT
     $this->tableWords.id AS word_id,
     $this->tableWords.word,
@@ -67,13 +243,14 @@ class WordsModel {
     FROM $this->tableWords
     JOIN $this->tableUsers ON $this->tableWords.user_id = $this->tableUsers.id 
     JOIN $this->tableWordsTags ON $this->tableWords.id = $this->tableWordsTags.word_id
-    WHERE $this->tableWordsTags.tag_id = ?";
+    WHERE $this->tableWordsTags.tag_id = ?
+    LIMIT ?,?";
 
     //Prepare the statment
     $stmt = $this->conn->prepare($query);
 
     // Bind ID
-    $stmt->bind_param('i', $id);
+    $stmt->bind_param('iii', $id, $start, $perPage);
 
     //Execute query
     $stmt->execute();
@@ -84,8 +261,37 @@ class WordsModel {
     return $this->addTags($words);
   }
 
-  // Get array of User words (with tags)
-  public function getByUserId($id) {
+  // public function getByTagId($id) {
+  //   $query = "SELECT
+  //   $this->tableWords.id AS word_id,
+  //   $this->tableWords.word,
+  //   $this->tableWords.definition, 
+  //   $this->tableWords.example,
+  //   $this->tableWords.user_id,
+  //   $this->tableWords.date_created AS word_date_created,
+  //   $this->tableUsers.name,
+  //   $this->tableUsers.profile_img
+  //   FROM $this->tableWords
+  //   JOIN $this->tableUsers ON $this->tableWords.user_id = $this->tableUsers.id 
+  //   JOIN $this->tableWordsTags ON $this->tableWords.id = $this->tableWordsTags.word_id
+  //   WHERE $this->tableWordsTags.tag_id = ?";
+
+  //   //Prepare the statment
+  //   $stmt = $this->conn->prepare($query);
+
+  //   // Bind ID
+  //   $stmt->bind_param('i', $id);
+
+  //   //Execute query
+  //   $stmt->execute();
+
+  //   $result = $stmt->get_result();
+  //   $words = $result->fetch_all(MYSQLI_ASSOC);
+
+  //   return $this->addTags($words);
+  // }
+
+  public function getByUserId($id, $start = 0, $perPage = 18446744073709551615) {
     $query = "SELECT 
     $this->tableWords.id AS word_id,
     $this->tableWords.word,
@@ -97,13 +303,14 @@ class WordsModel {
     $this->tableUsers.profile_img
     FROM $this->tableWords
     JOIN $this->tableUsers ON $this->tableWords.user_id = $this->tableUsers.id
-    WHERE $this->tableWords.user_id = ?";
+    WHERE $this->tableWords.user_id = ? 
+    LIMIT ?,?";
 
     //Prepare the statment
     $stmt = $this->conn->prepare($query);
 
     // Bind ID
-    $stmt->bind_param('i', $id);
+    $stmt->bind_param('iii', $id, $start, $perPage);
 
     //Execute query
     $stmt->execute();
@@ -113,6 +320,36 @@ class WordsModel {
 
     return $this->addTags($words);
   }
+
+  // Get array of User words (with tags)
+  // public function getByUserId($id) {
+  //   $query = "SELECT 
+  //   $this->tableWords.id AS word_id,
+  //   $this->tableWords.word,
+  //   $this->tableWords.definition, 
+  //   $this->tableWords.example,
+  //   $this->tableWords.user_id,
+  //   $this->tableWords.date_created AS word_date_created,
+  //   $this->tableUsers.name,
+  //   $this->tableUsers.profile_img
+  //   FROM $this->tableWords
+  //   JOIN $this->tableUsers ON $this->tableWords.user_id = $this->tableUsers.id
+  //   WHERE $this->tableWords.user_id = ?";
+
+  //   //Prepare the statment
+  //   $stmt = $this->conn->prepare($query);
+
+  //   // Bind ID
+  //   $stmt->bind_param('i', $id);
+
+  //   //Execute query
+  //   $stmt->execute();
+
+  //   $result = $stmt->get_result();
+  //   $words = $result->fetch_all(MYSQLI_ASSOC);
+
+  //   return $this->addTags($words);
+  // }
 
   // Get single word by ID with its tags
   public function getWordById($id) {

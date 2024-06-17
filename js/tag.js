@@ -3,12 +3,56 @@ import { autocomplete } from "./autocomplete.js";
 let tags = [];
 let tagsDB = application.tags;
 
+export function filterTag(tag) {
+  // return tag
+  //   .replace(/[^\w -]/g, "")
+  //   .trim()
+  //   .replace(/\W+/g, "-");
+  return tag
+    .replace(/[^a-zа-яёЁЇїІіЄєҐґʼ]*/gi, "")
+    .trim()
+    .toLowerCase();
+}
+
+function reset() {
+  document.querySelectorAll(".tag").forEach(function (tag) {
+    tag.parentElement.removeChild(tag);
+  });
+}
+
+function createTag(text) {
+  const tag = document.createElement("div");
+  tag.classList.add("tag");
+  tag.textContent = text;
+
+  const closeBtn = document.createElement("span");
+  closeBtn.classList.add("material-symbols-outlined");
+  closeBtn.innerText = "close";
+  closeBtn.setAttribute("data-item", text);
+
+  tag.appendChild(closeBtn);
+
+  return tag;
+}
+
+export function addTags(inputTags, element) {
+  reset();
+  inputTags
+    .slice()
+    .reverse()
+    .forEach(function (tag) {
+      let tagEl = createTag(tag);
+      element.prepend(tagEl);
+    });
+  // localStorage.setItem("tags", JSON.stringify(tags));
+}
+
 // TODO - add input data to localstorage =====================
 
 // window.addEventListener("load", function () {
 //   tags = getLocalStorage() ?? [];
 //   if (tags.length) {
-//     addTags();
+//     addTags(tags,tagContainer );
 //   }
 // });
 
@@ -35,6 +79,13 @@ let tagsDB = application.tags;
 //   localStorage.setItem("example", JSON.stringify(exampleInput.value));
 // });
 
+// function getLocalStorage() {
+//   let tagsLS = JSON.parse(localStorage.getItem("tags"));
+//   if (tagsLS) {
+//     return [...tagsLS];
+//   }
+// }
+
 // ================add input tags=======================
 const tagContainer = document.querySelector(".tags-input");
 
@@ -44,7 +95,7 @@ if (tagContainer) {
   const tagsCurrent = tagContainer.dataset.current;
   if (tagsCurrent) {
     tags = tagsCurrent.split(",");
-    addTags();
+    addTags(tags, tagContainer);
   }
 
   mainInput.setAttribute("type", "text");
@@ -61,7 +112,7 @@ if (tagContainer) {
         let tagFilter = filterTag(enteredTag);
         if (tagFilter) {
           tags.push(filterTag(enteredTag));
-          addTags();
+          addTags(tags, tagContainer);
         }
       }
       mainInput.value = "";
@@ -76,7 +127,7 @@ if (tagContainer) {
         let tagFilter = filterTag(enteredTag);
         if (tagFilter) {
           tags.push(filterTag(enteredTag));
-          addTags();
+          addTags(tags, tagContainer);
         }
       }
       mainInput.value = "";
@@ -84,78 +135,30 @@ if (tagContainer) {
   });
 
   document.addEventListener("click", function (e) {
-    if (e.target.tagName === "SPAN") {
+    if (e.target.innerHTML === "close") {
       const value = e.target.getAttribute("data-item");
       const index = tags.indexOf(value);
       tags = [...tags.slice(0, index), ...tags.slice(index + 1)];
-      addTags();
+      addTags(tags, tagContainer);
     }
   });
 
-  function reset() {
-    document.querySelectorAll(".tag").forEach(function (tag) {
-      tag.parentElement.removeChild(tag);
+  const formHandleWord = document.querySelector(".form-handle-word");
+
+  if (formHandleWord) {
+    formHandleWord.addEventListener("submit", function () {
+      if (tags.length) {
+        tags.forEach(function (tag, index) {
+          let hiddenInput = document.createElement("input");
+          hiddenInput.setAttribute("type", "hidden");
+          hiddenInput.setAttribute("name", `tags[]`);
+          hiddenInput.value = tag;
+          tagContainer.appendChild(hiddenInput);
+        });
+      }
+      // localStorage.removeItem("tags");
     });
   }
-
-  function createTag(text) {
-    const tag = document.createElement("div");
-    tag.classList.add("tag");
-    tag.textContent = text;
-
-    const closeBtn = document.createElement("span");
-    closeBtn.classList.add("material-symbols-outlined");
-    closeBtn.innerText = "close";
-    closeBtn.setAttribute("data-item", text);
-
-    tag.appendChild(closeBtn);
-    return tag;
-  }
-
-  function addTags() {
-    reset();
-    tags
-      .slice()
-      .reverse()
-      .forEach(function (tag) {
-        let tagEl = createTag(tag);
-        tagContainer.prepend(tagEl);
-      });
-    // localStorage.setItem("tags", JSON.stringify(tags));
-  }
-
-  function filterTag(tag) {
-    // return tag
-    //   .replace(/[^\w -]/g, "")
-    //   .trim()
-    //   .replace(/\W+/g, "-");
-    return tag
-      .replace(/[^a-zа-яёЁЇїІіЄєҐґʼ]*/gi, "")
-      .trim()
-      .toLowerCase();
-  }
-
-  // function getLocalStorage() {
-  //   let tagsLS = JSON.parse(localStorage.getItem("tags"));
-  //   if (tagsLS) {
-  //     return [...tagsLS];
-  //   }
-  // }
-
-  let formSbmCreate = document.querySelector(".form-handle-word");
-
-  formSbmCreate.addEventListener("submit", function () {
-    if (tags.length) {
-      tags.forEach(function (tag, index) {
-        let hiddenInput = document.createElement("input");
-        hiddenInput.setAttribute("type", "hidden");
-        hiddenInput.setAttribute("name", `tags[]`);
-        hiddenInput.value = tag;
-        tagContainer.appendChild(hiddenInput);
-      });
-    }
-    // localStorage.removeItem("tags");
-  });
 
   //TODO - do something to don't lose user's data after reload
 
@@ -182,6 +185,8 @@ if (tagContainer) {
   datalist.setAttribute("id", "autocomplete-list");
   mainInput.setAttribute("list", "autocomplete-list");
   tagContainer.appendChild(datalist);
+
+  console.log("tagsDB", tagsDB);
 
   autocomplete(tagsDB, datalist, "tag");
 }

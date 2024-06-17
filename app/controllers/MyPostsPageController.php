@@ -1,33 +1,45 @@
 <?php
 
 include_once ROOT_DIR . '/models/WordsModel.php';
+include_once ROOT_DIR . '/app/controllers/AuthorisedController.php';
 
 
-class MyPostsPageController {
+class MyPostsPageController extends AuthorisedController {
 
   public function canHandle() {
     $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET";
-    if ($isMethodSupported && $_SERVER["REQUEST_URI"] === '/myposts') {
+    $urlPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    if ($isMethodSupported && $urlPath === '/myposts') {
       return true;
     }
     return false;
   }
 
   public function handle() {
-    session_start();
+    $userID = $this->getAuthUserId();
     $word = new WordsModel();
 
     $params = [
       'words' => [],
-      'userID' => $_SESSION["user_id"] ?? NULL
+      'userID' => $userID,
+      'pagination' => []
     ];
 
-    if (!$params['userID']) {
-      header("Location: /");
-      exit;
+    $allWordsCount = $word->countWordsByUserId($userID);
+
+    // pagination
+    $perPage = 6;
+    $params['pagination']['totalPages'] = ceil($allWordsCount / $perPage);
+
+    if (isset($_GET['page'])) {
+      $params['pagination']['page'] = $_GET['page'];
+      $params['pagination']['start'] = (($_GET['page'] - 1) * $perPage);
+    } else {
+      $params['pagination']['page'] = 1;
+      $params['pagination']['start'] = 0;
     }
 
-    $params['words'] = $word->getByUserId($params['userID']);
+    $params['words'] = $word->getByUserId($userID, $params['pagination']['start'], $perPage);
 
     echo $this->renderView('myPosts', $params);
   }

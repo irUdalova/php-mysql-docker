@@ -13,8 +13,36 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
     <h1>RESULTS FOR TAG <span class="tag-title"><?= $activeTag['tag'] ?></span></h1>
   <?php endif; ?>
 
-  <?php if (empty($words)) : ?>
+
+
+  <form class="control-bar-form" action="/" method="get" autocomplete="off">
+    <div class="control-search">
+      <input class="inp-text" name="search" placeholder="Find a word" contenteditable id="search" value="<?= $control['search'] ?>" maxlength="100"></input>
+      <button class="sbm-btn search" type="submit"><span class="material-symbols-outlined">search</span></button>
+    </div>
+
+    <div class="control-filter-tag">
+      <div class="control-tags-container" data-current="<?= $control['tagsStr'] ?? "" ?>">
+      </div>
+      <button class="sbm-btn filter" type="submit">apply</button>
+    </div>
+
+    <div class="control-sort">
+      <select class="control-sort" name="sort" id="sort">
+        <option value="new" <?= $control['sort'] === 'new' ? 'selected' : ''; ?>>Newest first</option>
+        <option value="old" <?= $control['sort'] === 'old' ? 'selected' : ''; ?>>Oldest first</option>
+        <option value="AZ" <?= $control['sort'] === 'AZ' ? 'selected' : ''; ?>>From A to Z</option>
+        <option value="ZA" <?= $control['sort'] === 'ZA' ? 'selected' : ''; ?>>From Z to A</option>
+      </select>
+    </div>
+  </form>
+
+  <?php if (empty($words) && empty($control['search'])) : ?>
     <p>There is no posts</p>
+  <?php endif; ?>
+
+  <?php if (!empty($control['search']) && empty($words)) : ?>
+    <p>Searching <span><strong><?= $control['search'] ?></strong></span> has no result</p>
   <?php endif; ?>
 
   <div class="posts">
@@ -56,4 +84,12 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
     <?php endforeach; ?>
 
   </div>
+
+  <?php if ($pagination['totalPages'] > 1) { ?>
+    <div class="pagination-wrap">
+      <?php include_once ROOT_DIR . '/app/views/pagination.php'; ?>
+    </div>
+  <?php } ?>
+
+
 </div>

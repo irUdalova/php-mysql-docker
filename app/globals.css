@@ -931,7 +931,8 @@ footer {
   gap: 20px;
 }
 
-.tags-input {
+.tags-input,
+.control-tags-container {
   background-color: white;
   padding: 5px;
   display: flex;
@@ -942,7 +943,8 @@ footer {
   align-items: center;
 }
 
-.tags-input .tag {
+.tags-input .tag,
+.control-tags-container .tag {
   padding: 0 10px;
   display: flex;
   align-items: center;
@@ -952,7 +954,8 @@ footer {
   transition: 0.3s ease-in-out;
 }
 
-.tags-input .tag .material-symbols-outlined {
+.tags-input .tag .material-symbols-outlined,
+.control-tags-container .tag .material-symbols-outlined {
   font-size: 20px;
   margin-left: 8px;
   padding: 1px;
@@ -961,7 +964,8 @@ footer {
   transition: 0.3s ease-in-out;
 }
 
-.tags-input .tag .material-symbols-outlined:hover {
+.tags-input .tag .material-symbols-outlined:hover,
+.control-tags-container .tag .material-symbols-outlined:hover {
   color: white;
   background-color: #f76f72;
 }
@@ -974,4 +978,179 @@ footer {
   min-height: 40px;
   margin: 0;
   padding: 10px;
+}
+
+/* =================pagination================= */
+
+.pagination-wrap {
+  margin: 60px 0;
+}
+
+.pagination-wrap .page-info {
+  text-align: center;
+  /* font-size: 14px; */
+  /* color: #f0f0f0; */
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.pagination .page-link {
+  text-decoration: none;
+  color: #555555;
+  padding: 5px 10px;
+  border: 1px solid #555555;
+  transition: 0.3s ease-in-out;
+}
+
+.pagination .page-link:hover {
+  background-color: #555555;
+  color: white;
+}
+
+.pagination .page-link.active {
+  background-color: #555555;
+  color: white;
+}
+
+/* .pagination .page-link.disabled {
+  color: #f0f0f0;
+  border: 1px solid #f0f0f0;
+  cursor: default;
+} */
+
+.control-bar-form {
+  display: flex;
+  /* height: 50px; */
+  align-items: center;
+  gap: 20px;
+  /* border-bottom: 1px solid #555555;
+  padding-bottom: 40px; */
+  margin: 40px 0;
+}
+
+.control-bar-form .control-search {
+  position: relative;
+}
+
+.control-bar-form .control-search .inp-text {
+  height: 50px;
+  margin: 0;
+  max-width: 400px;
+  min-width: 400px;
+  font-size: 16px;
+}
+
+.control-bar-form .control-filter-tag {
+  flex-grow: 1;
+  /* position: relative; */
+  display: flex;
+  align-items: center;
+}
+
+.control-bar-form .control-filter-tag .tags-input {
+  min-height: 40px;
+  /* flex-grow: 1; */
+  margin: 0;
+  font-size: 16px;
+  /* padding: 0; */
+}
+
+.control-bar-form .control-filter-tag .tags-input .main-input::placeholder {
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.control-bar-form .control-sort {
+  height: 50px;
+  /* border: 1px solid #555555; */
+  background-color: white;
+  width: 120px;
+  padding: 5px;
+  border: none;
+  color: #555555;
+  font-size: 16px;
+}
+
+.control-bar-form .sbm-btn.search {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  margin: 0;
+  /* top: 0; */
+  bottom: 0;
+  right: 0px;
+  background-color: #555555;
+  color: white;
+  transition: 0.3s ease-in-out;
+}
+
+.control-bar-form .sbm-btn.filter {
+  width: 60px;
+  height: 50px;
+  background-color: #555555;
+  color: white;
+  margin: 0;
+  flex-shrink: 0;
+  transition: 0.3s ease-in-out;
+}
+
+.control-bar-form .sbm-btn.search:hover,
+.control-bar-form .sbm-btn.filter:hover {
+  background-color: #f76f72;
+}
+
+.control-tags-container {
+  position: relative;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.tags-dropdown-list {
+  position: absolute;
+  /* top: 50px; */
+  transform: translate(0, 100%);
+  bottom: 0;
+  left: 0;
+  padding: 0 20px;
+  margin: 0;
+  list-style-type: none;
+  width: 100%;
+  background-color: white;
+  max-height: 200px;
+  overflow: scroll;
+  z-index: 10;
+  display: none;
+}
+
+.control-tags-container.active .tags-dropdown-list {
+  display: block;
+}
+
+.control-tags-container.active .tag-list-item.selected {
+  display: none;
+}
+
+.tags-dropdown-list .tag-list-item {
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  height: 50px;
+  border-bottom: solid 1px #555555;
+  transition: 0.2s ease-in-out;
+}
+
+.tags-dropdown-list .tag-list-item:last-child {
+  border-bottom: none;
+}
+
+.tags-dropdown-list .tag-list-item:hover {
+  background-color: #555555;
+  color: white;
+  cursor: pointer;
 }

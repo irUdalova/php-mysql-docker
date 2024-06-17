@@ -33,7 +33,7 @@ class ProfileImgUpdateController {
     }
 
     $params['userData'] = $user->getById($params['userID']);
-    $params['postsCount'] = count($word->getByUserId($params['userID']));
+    $params['postsCount'] = $word->countWordsByUserId($params['userID']);
 
     if ($_SERVER["REQUEST_METHOD"] === "GET") {
       echo $this->renderView('profileImgEdit', $params);

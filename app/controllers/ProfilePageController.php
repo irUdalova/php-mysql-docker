@@ -31,7 +31,7 @@ class ProfilePageController {
     }
 
     $params['userData'] = $user->getById($params['userID']);
-    $params['postsCount'] = count($word->getByUserId($params['userID']));
+    $params['postsCount'] = $word->countWordsByUserId($params['userID']);
 
     echo $this->renderView('profile', $params);
   }

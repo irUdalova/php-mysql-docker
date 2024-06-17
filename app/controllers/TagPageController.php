@@ -15,9 +15,9 @@ class TagPageController {
 
   public function canHandle() {
     $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET";
-    $request = $_SERVER["REQUEST_URI"];
+    $urlPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     $regex = '~^/tags/[0-9]+$~i';
-    if ($isMethodSupported && preg_match($regex, $request)) {
+    if ($isMethodSupported && preg_match($regex, $urlPath)) {
       return true;
     }
     return false;
@@ -31,10 +31,31 @@ class TagPageController {
     $params = [
       'words' => [],
       'userID' => $_SESSION["user_id"] ?? NULL,
-      'activeTag' => []
+      'activeTag' => [],
+      'pagination' => []
     ];
 
-    $params['words'] = $word->getByTagId($this->tagID);
+    $allWordsCount = $word->countWordsByTagId($this->tagID);
+    echo '<pre>';
+    var_dump($allWordsCount, 'allWordsCount');
+    echo '</pre>';
+
+
+    // pagination
+    $perPage = 6;
+    $params['pagination']['totalPages'] = ceil($allWordsCount / $perPage);
+
+    if (isset($_GET['page'])) {
+      $params['pagination']['page'] = $_GET['page'];
+      $params['pagination']['start'] = (($_GET['page'] - 1) * $perPage);
+    } else {
+      $params['pagination']['page'] = 1;
+      $params['pagination']['start'] = 0;
+    }
+
+
+
+    $params['words'] = $word->getByTagId($this->tagID, $params['pagination']['start'], $perPage);
     $params['activeTag'] = $tag->getTagById($this->tagID);
 
     echo $this->renderView('home', $params);

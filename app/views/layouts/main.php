@@ -48,7 +48,7 @@ $userId = $_SESSION["user_id"] ?? NULL;
 
         <nav class="nav">
           <ul class="nav-list">
-            <li class="nav-item"><a href="/" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "/") ? "active" : null; ?>">HOME</a></li>
+            <li class="nav-item"><a href="/" class="nav-link <?php echo parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) === "/" ? "active" : null; ?>">HOME</a></li>
 
             <?php if (!$userId) : ?>
               <li class="nav-item nav-login"><a href="/login" class="nav-link  <?php echo ($_SERVER["REQUEST_URI"] === "/login") ? "active" : null; ?>">LOG IN</a></li>
@@ -56,7 +56,7 @@ $userId = $_SESSION["user_id"] ?? NULL;
             <?php endif; ?>
 
             <?php if ($userId) : ?>
-              <li class="nav-item"><a href="/myposts" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "/myposts") ? "active" : null; ?>">MY POSTS</a></li>
+              <li class="nav-item"><a href="/myposts" class="nav-link <?php echo (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) === "/myposts") ? "active" : null; ?>">MY POSTS</a></li>
               <li class="nav-item"><a href="/favourites" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "/favourites") ? "active" : null; ?>">FAVOURITES</a></li>
               <li class="nav-item nav-profile"><a href="/profile" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "/profile") ? "active" : null; ?>">
                   <!-- <div class="profile-image small">
@@ -100,6 +100,7 @@ $userId = $_SESSION["user_id"] ?? NULL;
   </footer>
   </div>
   <script type="module" src="/js/tag.js"></script>
+  <script type="module" src="/js/controls.js"></script>
 </body>
 
 </html>
