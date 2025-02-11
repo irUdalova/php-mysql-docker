@@ -47,9 +47,9 @@ function createPath($page) {
 <div class="page-info"> Showing <?= $pagination['page'] ?> of <?= $pagination['totalPages'] ?> </div>
 <div class="pagination">
 
-  <a href="?<?= createPath(1) ?>" class="page-link first">First</a>
   <?php
   if (isset($_GET['page']) && $pagination['page'] > 1) { ?>
+    <a href="?<?= createPath(1) ?>" class="page-link first">First</a>
     <a href="?<?= createPath($pagination['page'] - 1) ?>" class="page-link previous">Previous</a>
   <?php } else { ?>
     <!-- <a class="page-link previous disabled">Previous</a> -->
@@ -71,9 +71,9 @@ function createPath($page) {
   if ($pagination['page'] >= 1 && $pagination['page'] < $pagination['totalPages']) {
   ?>
     <a href="?<?= createPath($pagination['page'] + 1) ?>" class="page-link next">Next</a>
+    <a href="?<?= createPath($pagination['totalPages']) ?>" class="page-link last">Last</a>
   <?php } elseif ($pagination['page'] >= $pagination['totalPages']) { ?>
     <!-- <a class="page-link previous disabled">Next</a> -->
   <?php } ?>
-  <a href="?<?= createPath($pagination['totalPages']) ?>" class="page-link last">Last</a>
 
 </div>

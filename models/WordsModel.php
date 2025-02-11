@@ -230,7 +230,7 @@ class WordsModel {
   }
 
   // Get array of word by specific tag
-  public function getByTagId($id, $start = 0, $perPage = 18446744073709551615) {
+  public function getByTagId($id, $start = 0, $perPage = 1844674407370955161) {
     $query = "SELECT
     $this->tableWords.id AS word_id,
     $this->tableWords.word,
@@ -291,7 +291,9 @@ class WordsModel {
   //   return $this->addTags($words);
   // }
 
-  public function getByUserId($id, $start = 0, $perPage = 18446744073709551615) {
+  //use the large number 18446744073709551615 for the second parameter to get all the values from table (From the MySQL documentation https://dev.mysql.com/doc/refman/8.4/en/select.html)
+  //but with this number table returns only one record, so i reduced the number to 1844674407370955161 and somehow it works
+  public function getByUserId($id, $start = 0, $perPage = 1844674407370955161) {
     $query = "SELECT 
     $this->tableWords.id AS word_id,
     $this->tableWords.word,
@@ -317,6 +319,7 @@ class WordsModel {
 
     $result = $stmt->get_result();
     $words = $result->fetch_all(MYSQLI_ASSOC);
+
 
     return $this->addTags($words);
   }

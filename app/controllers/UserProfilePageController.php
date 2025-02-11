@@ -15,12 +15,21 @@ class UserProfilePageController {
 
   public function canHandle() {
     $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET";
-    $request = $_SERVER["REQUEST_URI"];
+
+    $urlPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
     $regex = '~^/profile/user/[0-9]+$~i';
-    if ($isMethodSupported && preg_match($regex, $request)) {
+    if ($isMethodSupported && preg_match($regex, $urlPath)) {
       return true;
     }
     return false;
+
+    // $request = $_SERVER["REQUEST_URI"];
+    // $regex = '~^/profile/user/[0-9]+$~i';
+    // if ($isMethodSupported && preg_match($regex, $request)) {
+    //   return true;
+    // }
+    // return false;
   }
 
   public function handle() {
@@ -31,12 +40,33 @@ class UserProfilePageController {
     $params = [
       'words' => [],
       'userData' => [],
-      'postsCount' => ''
+      'postsCount' => '',
+      'pagination' => []
     ];
 
-    $params['words'] = $word->countWordsByUserId($this->userID);
+    $allWordsCount = $word->countWordsByUserId($this->userID);
+
+    // pagination
+    $perPage = 3;
+    $params['pagination']['totalPages'] = ceil($allWordsCount / $perPage);
+
+    if (isset($_GET['page'])) {
+      $params['pagination']['page'] = $_GET['page'];
+      $params['pagination']['start'] = (($_GET['page'] - 1) * $perPage);
+    } else {
+      $params['pagination']['page'] = 1;
+      $params['pagination']['start'] = 0;
+    }
+
+    $params['words'] = $word->getByUserId($this->userID, $params['pagination']['start'], $perPage);
     $params['userData'] = $user->getById($this->userID);
-    $params['postsCount'] = count($params['words']);
+    $params['postsCount'] = $allWordsCount;
+
+
+    // $params['words'] = $word->getByUserId($this->userID);
+    // $params['userData'] = $user->getById($this->userID);
+    // $params['postsCount'] = count($params['words']);
+    // $params['postsCount'] = $word->countWordsByUserId($this->userID); // perhaps an excessive method!!????
 
     echo $this->renderView('userProfile', $params);
   }

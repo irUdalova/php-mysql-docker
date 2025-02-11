@@ -1,3 +1,6 @@
 .env
 public/uploads
 config/php
+
+# macOS
+**/.DS_Store

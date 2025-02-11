@@ -9,6 +9,7 @@ class MyPostsPageController extends AuthorisedController {
   public function canHandle() {
     $isMethodSupported = $_SERVER["REQUEST_METHOD"] === "GET";
     $urlPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
     if ($isMethodSupported && $urlPath === '/myposts') {
       return true;
     }

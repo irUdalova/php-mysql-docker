@@ -28,11 +28,6 @@ class HomePageController {
 
     $getData = $this->getGetData();
 
-    // echo '<pre>';
-    // var_dump($getData, 'getData');
-    // echo '</pre>';
-
-
     if (isset($getData['sort'])) {
       $order = addslashes(SORT_PARAMS[$getData['sort']]['order']);
       $orderType = addslashes(SORT_PARAMS[$getData['sort']]['order_type']);
@@ -61,7 +56,10 @@ class HomePageController {
     // $params['control']['tagsStr'] = $this->tagsToStr($tags);
     $params['control']['tagsStr'] = $this->tagsToStr($tags);
 
-    // pagination]
+    //new!!!!
+    $params['control']['tags'] = $tags;
+
+    // pagination
     $allWordsCount = $word->countAllWords($search, $tags);
 
     $perPage = 3;

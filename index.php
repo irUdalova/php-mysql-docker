@@ -42,7 +42,6 @@ include_once './app/controllers/UserProfilePageController.php';
 include_once './app/controllers/PostPageController.php';
 include_once './app/controllers/PostEditPageController.php';
 include_once './app/controllers/PostDeletePageController.php';
-include_once './app/controllers/TagPageController.php';
 
 $readAll = new PostReadAllController;
 $create = new PostCreateController;
@@ -70,7 +69,6 @@ $appUserProfile = new UserProfilePageController;
 $appPost = new PostPageController;
 $appPostEdit = new PostEditPageController;
 $appPostDelete = new PostDeletePageController;
-$appTag = new TagPageController;
 
 
 RouterControllersRegistry::add($readAll);
@@ -99,7 +97,6 @@ RouterControllersRegistry::add($appUserProfile);
 RouterControllersRegistry::add($appPost);
 RouterControllersRegistry::add($appPostEdit);
 RouterControllersRegistry::add($appPostDelete);
-RouterControllersRegistry::add($appTag);
 
 if (RouterControllersRegistry::canHandle()) {
   RouterControllersRegistry::handle();

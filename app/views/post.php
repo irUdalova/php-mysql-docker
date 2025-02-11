@@ -22,7 +22,7 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
 
       <div class="post-tags-container">
         <?php foreach ($wordData['tags'] as $tag) : ?>
-          <a class="post-tag-link <?= $activeTag && $activeTag['id'] === $tag['tag_id'] ? "active" : NULL ?>" href=<?= "/tags/" . $tag['tag_id'] ?>> <?= $tag['tag'] ?></a>
+          <p class="post-tag"> <?= $tag['tag'] ?></p>
         <?php endforeach; ?>
       </div>
 

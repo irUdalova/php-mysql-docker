@@ -7,12 +7,8 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
 
   <?php if (empty($activeTag)) : ?>
     <h1>DISCOVER SOMETHING NEW</h1>
+    <?php (!empty($control['tags'])) ? $activeTags = array_column($control['tags'], 'id') : $activeTags = NULL ?>
   <?php endif; ?>
-
-  <?php if (!empty($activeTag)) : ?>
-    <h1>RESULTS FOR TAG <span class="tag-title"><?= $activeTag['tag'] ?></span></h1>
-  <?php endif; ?>
-
 
 
   <form class="control-bar-form" action="/" method="get" autocomplete="off">
@@ -59,7 +55,7 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
 
           <div class="post-tags-container">
             <?php foreach ($word['tags'] as $tag) : ?>
-              <a class="post-tag-link <?= $activeTag && $activeTag['id'] === $tag['tag_id'] ? "active" : NULL ?>" href=<?= "/tags/" . $tag['tag_id'] ?>> <?= $tag['tag'] ?></a>
+              <p class="post-tag <?= $activeTags && in_array($tag['tag_id'], $activeTags) ? "active" : NULL ?>"> <?= $tag['tag'] ?></p>
             <?php endforeach; ?>
           </div>
 
