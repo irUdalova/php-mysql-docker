@@ -75,6 +75,17 @@ class HomePageController {
 
     $params['words'] = $word->getAll($search, $tags, $order, $orderType, $params['pagination']['start'], $perPage);
 
+    //define favorites words for current user
+    if (!empty($params['userID'])) {
+      $wordsFav = $word->getAllFavorites($params['userID']);
+
+      if (!empty($wordsFav)) {
+        foreach ($params['words'] as $index => $wordSingle) {
+          $params['words'][$index]['isFavorite'] = in_array($wordSingle['word_id'], $wordsFav);
+        }
+      }
+    }
+
     echo $this->renderView('home', $params);
   }
 

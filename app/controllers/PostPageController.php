@@ -33,6 +33,13 @@ class PostPageController {
 
     $params['wordData'] = $word->getWordById($this->postID);
 
+    //define favorites words for current user
+    if (!empty($params['userID'])) {
+      $wordsFav = $word->getAllFavorites($params['userID']);
+
+      $params['wordData']['isFavorite'] = in_array($params['wordData']['word_id'], $wordsFav);
+    }
+
     echo $this->renderView('post', $params);
   }
 

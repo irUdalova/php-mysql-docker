@@ -29,7 +29,7 @@ include_once './app/controllers/LogoutController.php';
 
 include_once './app/controllers/MyPostsPageController.php';
 include_once './app/controllers/PostCreatePageController.php';
-include_once './app/controllers/FavouritesPageController.php';
+include_once './app/controllers/FavoritesPageController.php';
 include_once './app/controllers/ProfilePageController.php';
 
 include_once './app/controllers/ProfileEditPageController.php';
@@ -42,6 +42,9 @@ include_once './app/controllers/UserProfilePageController.php';
 include_once './app/controllers/PostPageController.php';
 include_once './app/controllers/PostEditPageController.php';
 include_once './app/controllers/PostDeletePageController.php';
+
+include_once './app/controllers/PostAddFavController.php';
+include_once './app/controllers/PostRemFavController.php';
 
 $readAll = new PostReadAllController;
 $create = new PostCreateController;
@@ -56,7 +59,7 @@ $appLogout = new LogoutController;
 
 $appMyPosts = new MyPostsPageController;
 $appPostCreate = new PostCreatePageController;
-$appFavourites = new FavouritesPageController;
+$appFavorites = new FavoritesPageController;
 $appProfile = new ProfilePageController;
 
 $appProfileEdit = new ProfileEditPageController;
@@ -69,6 +72,9 @@ $appUserProfile = new UserProfilePageController;
 $appPost = new PostPageController;
 $appPostEdit = new PostEditPageController;
 $appPostDelete = new PostDeletePageController;
+
+$appPostAddFav = new PostAddFavController;
+$appPostRemFav = new PostRemFavController;
 
 
 RouterControllersRegistry::add($readAll);
@@ -84,7 +90,7 @@ RouterControllersRegistry::add($appLogout);
 
 RouterControllersRegistry::add($appMyPosts);
 RouterControllersRegistry::add($appPostCreate);
-RouterControllersRegistry::add($appFavourites);
+RouterControllersRegistry::add($appFavorites);
 RouterControllersRegistry::add($appProfile);
 
 RouterControllersRegistry::add($appProfileEdit);
@@ -97,6 +103,9 @@ RouterControllersRegistry::add($appUserProfile);
 RouterControllersRegistry::add($appPost);
 RouterControllersRegistry::add($appPostEdit);
 RouterControllersRegistry::add($appPostDelete);
+
+RouterControllersRegistry::add($appPostAddFav);
+RouterControllersRegistry::add($appPostRemFav);
 
 if (RouterControllersRegistry::canHandle()) {
   RouterControllersRegistry::handle();

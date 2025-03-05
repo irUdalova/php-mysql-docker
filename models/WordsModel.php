@@ -13,6 +13,9 @@ class WordsModel {
   private $tableUsers = "users";
   private $tableWordsTags = "words_tags";
 
+  //favorites
+  private $tableFavorites = "favorites";
+
   //Constructor with DB
   public function __construct() {
     $this->conn = DatabaseConnector::getConnection();
@@ -151,6 +154,26 @@ class WordsModel {
     return $wordsTotal['words_total'];
   }
 
+  public function countFavWordsByUserId($id) {
+    $query = "SELECT COUNT(id) as words_total FROM $this->tableFavorites WHERE $this->tableFavorites.user_id = ?";
+
+    //Prepare the statment
+    $stmt = $this->conn->prepare($query);
+
+    // Bind ID
+    $stmt->bind_param('i', $id);
+
+    //Execute query
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
+    $wordsTotal = $result->fetch_array();
+
+    return $wordsTotal['words_total'];
+  }
+
+  //no longer used anywhere
   public function countWordsByTagId($id) {
     $query = "SELECT COUNT(id) as words_total FROM $this->tableWordsTags WHERE $this->tableWordsTags.tag_id = ?";
 
@@ -306,6 +329,8 @@ class WordsModel {
     FROM $this->tableWords
     JOIN $this->tableUsers ON $this->tableWords.user_id = $this->tableUsers.id
     WHERE $this->tableWords.user_id = ? 
+    -- in order to display new words first
+    ORDER BY $this->tableWords.date_created DESC 
     LIMIT ?,?";
 
     //Prepare the statment
@@ -469,5 +494,128 @@ class WordsModel {
     };
     printf("Error: %s. \n", $stmt->error);
     return false;
+  }
+
+  //favorites
+
+  public function checkFavExist($userID, $wordId) {
+    //Create query
+    $query = "SELECT * FROM $this->tableFavorites WHERE user_id = ? AND word_id = ?";
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("ii", $userID, $wordId);
+
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $existFav = $result->fetch_all(MYSQLI_ASSOC);
+
+    echo '<pre>';
+    var_dump($existFav, 'existFav');
+    echo '</pre>';
+
+    return $existFav;
+  }
+
+  public function addToFavorites($userID, $wordId) {
+    //Create query
+    $query = "INSERT INTO $this->tableFavorites (user_id, word_id) VALUES (?,?)";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("ii", $userID, $wordId);
+
+    if ($stmt->execute()) {
+      $last_id = $this->conn->insert_id;
+      // return $last_id;
+      return true;
+    };
+    // printf("Error: %s. \n", $stmt->error);
+    return false;
+  }
+
+  public function removeFromFavorites($userID, $wordId) {
+    //Delete query
+    $query = "DELETE FROM $this->tableFavorites WHERE user_id=? AND word_id=?";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("ii", $userID, $wordId);
+
+    if ($stmt->execute()) {
+      return true;
+    };
+    printf("Error: %s. \n", $stmt->error);
+    return false;
+  }
+
+  public function getAllFavorites($userID) {
+    $query = "SELECT * FROM $this->tableFavorites WHERE user_id=?";
+
+    //Prepare the statment
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param("i", $userID);
+
+    //Execute query
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $wordsFav = $result->fetch_all(MYSQLI_ASSOC);
+
+    $wordsFavId = array_column($wordsFav, 'word_id');
+
+    return $wordsFavId;
+  }
+
+  public function getFavByUserId($id, $start = 0, $perPage = 1844674407370955161) {
+    $query = "SELECT 
+    $this->tableWords.id AS word_id,
+    $this->tableWords.word,
+    $this->tableWords.definition, 
+    $this->tableWords.example,
+    $this->tableWords.user_id,
+    $this->tableWords.date_created AS word_date_created,
+    $this->tableUsers.name,
+    $this->tableUsers.profile_img
+    FROM $this->tableWords
+    JOIN $this->tableUsers ON $this->tableWords.user_id = $this->tableUsers.id
+    JOIN $this->tableFavorites ON $this->tableWords.id = $this->tableFavorites.word_id
+    WHERE $this->tableFavorites.user_id = ?
+    LIMIT ?,?";
+
+    //Prepare the statment
+    $stmt = $this->conn->prepare($query);
+
+    // Bind ID
+    $stmt->bind_param('iii', $id, $start, $perPage);
+
+    //Execute query
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $words = $result->fetch_all(MYSQLI_ASSOC);
+
+
+    return $this->addTags($words);
+  }
+
+  public function getMostFavorite() {
+
+    $query = "SELECT COUNT($this->tableFavorites.word_id) AS amount,
+    $this->tableFavorites.word_id,
+    $this->tableWords.word
+    FROM $this->tableFavorites
+    JOIN $this->tableWords ON $this->tableFavorites.word_id = $this->tableWords.id
+    GROUP BY $this->tableFavorites.word_id
+    ORDER BY amount DESC";
+
+    //Prepare the statment
+    $stmt = $this->conn->prepare($query);
+
+    //Execute query
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $tableFav = $result->fetch_all(MYSQLI_ASSOC);
+
+    $topThreeFav = array_slice($tableFav, 0, 3);
+
+    return $topThreeFav;
   }
 }

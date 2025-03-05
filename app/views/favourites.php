@@ -1,1 +1,0 @@
-<p>favouritesController</p>

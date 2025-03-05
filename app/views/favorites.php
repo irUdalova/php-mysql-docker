@@ -4,40 +4,48 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
 
 <div class="main-page">
 
-  <!-- <h1>MY WORDS</h1> -->
 
-  <?php if (empty($words)) {
-    if ($pagination['page'] > 1) { ?>
-      <p>There no words on this page</p>
-    <?php } else { ?>
-      <p>You did not add any words yet, maybe it is time to add new one?</p>
-    <?php } ?>
-  <?php } ?>
+
+
+  <?php if (!empty($topFavorites)) : ?>
+    <div class="post-top-favorites">
+      <h3 class="post-top-fav-title">Top three popular favorites words are:</h3>
+
+      <?php foreach ($topFavorites as $favWord) : ?>
+        <div class="post-fav">
+          <a class="post-link top-fav" href="/posts/<?= $favWord['word_id']; ?>">
+            <h2 class="title title-fav"><?= $favWord['word'] ?> </h2>
+            <div class="fav-amount">
+              <span class=fav-amount-num><?= $favWord['amount'] ?></span>
+              <span class="material-symbols-outlined">favorite</span>
+            </div>
+          </a>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  <?php endif ?>
+
+
+
+  <h1>MY FAVORITES WORDS</h1>
+
+  <?php if (empty($words)) : ?>
+    <p>You did not add any words yet, maybe it is time to add new one?</p>
+  <?php endif ?>
 
   <div class="posts">
-
-    <div class="post create">
-      <p class="material-symbols-outlined create-post">add_circle</p>
-      <h2 class="title">create word</h2>
-      <a class="create-post-link" href="/post/create"></a>
-    </div>
 
     <?php foreach ($words as $word) : ?>
       <div class="post">
 
         <div class="post-favorites">
 
-          <?php if (isset($word['isFavorite']) && $word['isFavorite']) : ?>
+          <?php if ($word['isFavorite']) : ?>
             <a class="post-remove-fav-link" href="/posts/<?= $word['word_id']; ?>/remfav"><span class="material-symbols-outlined">favorite</span></a>
           <?php else: ?>
             <a class="post-add-fav-link" href="/posts/<?= $word['word_id']; ?>/addfav"><span class="material-symbols-outlined">favorite</span></a>
           <?php endif; ?>
 
-        </div>
-
-        <div class="post-controllers-wrap">
-          <a class="post-edit-link" href="/posts/<?= $word['word_id']; ?>/edit"><span class="material-symbols-outlined">edit</span></a>
-          <a class="post-delete-link" href="/posts/<?= $word['word_id']; ?>/delete"><span class="material-symbols-outlined">delete</span></a>
         </div>
 
         <a class="post-link" href="/posts/<?= $word['word_id']; ?>">

@@ -169,7 +169,7 @@ class PostCreatePageController extends AuthorisedController {
 
     if (empty($data['example'])) {
       $errors['example'] = 'This field is required';
-    } elseif (preg_match($regSymbols, $$data['example'])) {
+    } elseif (preg_match($regSymbols, $data['example'])) {
       $errors['example'] =  'This field contains characters that are not allowed';
     }
 

@@ -46,6 +46,16 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
     <?php foreach ($words as $word) : ?>
       <div class="post">
 
+        <?php if (!empty($userID)) : ?>
+          <div class="post-favorites">
+            <?php if (!empty($word['isFavorite'])) : ?>
+              <a class="post-remove-fav-link" href="/posts/<?= $word['word_id']; ?>/remfav"><span class="material-symbols-outlined">favorite</span></a>
+            <?php else: ?>
+              <a class="post-add-fav-link" href="/posts/<?= $word['word_id']; ?>/addfav"><span class="material-symbols-outlined">favorite</span></a>
+            <?php endif; ?>
+          </div>
+        <?php endif; ?>
+
         <a class="post-link" href="/posts/<?= $word['word_id']; ?>">
           <h2 class="title"><?php echo $word['word']; ?> </h2>
           <p class="post-body"><?php echo $word['definition']; ?> </p>

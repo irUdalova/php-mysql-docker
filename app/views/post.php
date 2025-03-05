@@ -6,6 +6,15 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
 <div class="post-single-wrap">
   <div class="post-single">
 
+    <?php if (!empty($userID)) : ?>
+      <div class=".post-favorites-single">
+        <?php if ($wordData['isFavorite']) : ?>
+          <a class="post-remove-fav-link" href="/posts/<?= $wordData['word_id']; ?>/remfav"><span class="material-symbols-outlined">favorite</span></a>
+        <?php else: ?>
+          <a class="post-add-fav-link" href="/posts/<?= $wordData['word_id']; ?>/addfav"><span class="material-symbols-outlined">favorite</span></a>
+        <?php endif; ?>
+      </div>
+    <?php endif; ?>
 
     <?php if ($userID === $wordData['user_id']) { ?>
       <div class="post-controllers-wrap">

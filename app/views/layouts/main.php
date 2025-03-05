@@ -57,7 +57,7 @@ $userId = $_SESSION["user_id"] ?? NULL;
 
             <?php if ($userId) : ?>
               <li class="nav-item"><a href="/myposts" class="nav-link <?php echo (parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) === "/myposts") ? "active" : null; ?>">MY POSTS</a></li>
-              <li class="nav-item"><a href="/favourites" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "/favourites") ? "active" : null; ?>">FAVOURITES</a></li>
+              <li class="nav-item"><a href="/favorites" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "/favorites") ? "active" : null; ?>">FAVORITES</a></li>
               <li class="nav-item nav-profile"><a href="/profile" class="nav-link <?php echo ($_SERVER["REQUEST_URI"] === "/profile") ? "active" : null; ?>">
                   <!-- <div class="profile-image small">
                     <img class="avatar-img" src=<?

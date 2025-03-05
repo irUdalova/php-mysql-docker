@@ -1,4 +1,7 @@
 <?php
+
+include_once ROOT_DIR . '/app/helpers/functions.php';
+
 function setStart($currentPage, $totalPages) {
   if ($totalPages <= 3) {
     return 1;
@@ -30,17 +33,17 @@ function setEnd($currentPage, $totalPages) {
   return $currentPage + 1;
 }
 
-function createPath($page) {
-  $urlQuery = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+// function createPath($page) {
+//   $urlQuery = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 
-  if ($urlQuery) {
-    parse_str($urlQuery, $output);
-    $output['page'] = $page;
-    return http_build_query($output);
-  }
-  $output['page'] = $page;
-  return http_build_query($output);
-}
+//   if ($urlQuery) {
+//     parse_str($urlQuery, $output);
+//     $output['page'] = $page;
+//     return http_build_query($output);
+//   }
+//   $output['page'] = $page;
+//   return http_build_query($output);
+// }
 ?>
 
 
@@ -48,6 +51,7 @@ function createPath($page) {
 <div class="pagination">
 
   <?php
+
   if (isset($_GET['page']) && $pagination['page'] > 1) { ?>
     <a href="?<?= createPath(1) ?>" class="page-link first">First</a>
     <a href="?<?= createPath($pagination['page'] - 1) ?>" class="page-link previous">Previous</a>
