@@ -23,6 +23,8 @@ include_once './api/controllers/PostUpdateController.php';
 include_once './api/controllers/PostDeleteController.php';
 
 include_once './app/controllers/HomePageController.php';
+
+include_once './app/controllers/ExplorePageController.php';
 include_once './app/controllers/LoginPageController.php';
 include_once './app/controllers/SignupPageController.php';
 include_once './app/controllers/LogoutController.php';
@@ -53,6 +55,8 @@ $update = new PostUpdateController;
 $delete = new PostDeleteController;
 
 $appHome = new HomePageController;
+
+$appExplore = new ExplorePageController;
 $appLogin = new LoginPageController;
 $appSignup = new SignupPageController;
 $appLogout = new LogoutController;
@@ -84,6 +88,8 @@ RouterControllersRegistry::add($update);
 RouterControllersRegistry::add($delete);
 
 RouterControllersRegistry::add($appHome);
+
+RouterControllersRegistry::add($appExplore);
 RouterControllersRegistry::add($appLogin);
 RouterControllersRegistry::add($appSignup);
 RouterControllersRegistry::add($appLogout);

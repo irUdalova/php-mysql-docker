@@ -2,32 +2,9 @@
 include_once ROOT_DIR . '/app/helpers/functions.php';
 ?>
 
-<div class="main-page">
+<div class="favorites-page">
 
-
-
-
-  <?php if (!empty($topFavorites)) : ?>
-    <div class="post-top-favorites">
-      <h3 class="post-top-fav-title">Top three popular favorites words are:</h3>
-
-      <?php foreach ($topFavorites as $favWord) : ?>
-        <div class="post-fav">
-          <a class="post-link top-fav" href="/posts/<?= $favWord['word_id']; ?>">
-            <h2 class="title title-fav"><?= $favWord['word'] ?> </h2>
-            <div class="fav-amount">
-              <span class=fav-amount-num><?= $favWord['amount'] ?></span>
-              <span class="material-symbols-outlined">favorite</span>
-            </div>
-          </a>
-        </div>
-      <?php endforeach; ?>
-    </div>
-  <?php endif ?>
-
-
-
-  <h1>MY FAVORITES WORDS</h1>
+  <!-- <h1>MY FAVORITES WORDS</h1> -->
 
   <?php if (empty($words)) : ?>
     <p>You did not add any words yet, maybe it is time to add new one?</p>

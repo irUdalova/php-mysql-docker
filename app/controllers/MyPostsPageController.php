@@ -28,7 +28,7 @@ class MyPostsPageController extends AuthorisedController {
     $allWordsCount = $word->countWordsByUserId($userID);
 
     // pagination
-    $perPage = 6;
+    $perPage = 5;
     $params['pagination']['totalPages'] = ceil($allWordsCount / $perPage);
 
     if (isset($_GET['page'])) {

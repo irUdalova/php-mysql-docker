@@ -510,10 +510,6 @@ class WordsModel {
     $result = $stmt->get_result();
     $existFav = $result->fetch_all(MYSQLI_ASSOC);
 
-    echo '<pre>';
-    var_dump($existFav, 'existFav');
-    echo '</pre>';
-
     return $existFav;
   }
 
@@ -617,5 +613,22 @@ class WordsModel {
     $topThreeFav = array_slice($tableFav, 0, 3);
 
     return $topThreeFav;
+  }
+
+  public function getRandomWord() {
+
+    $query = "SELECT * FROM $this->tableWords ORDER BY RAND( ) LIMIT 1";
+
+    //Prepare the statment
+    $stmt = $this->conn->prepare($query);
+
+    //Execute query
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $randomWord = $result->fetch_all(MYSQLI_ASSOC)[0];
+
+
+    return $randomWord;
   }
 }

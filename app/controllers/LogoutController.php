@@ -16,7 +16,8 @@ class LogoutController {
     session_start();
     session_unset();
     session_destroy();
-    header('Location: ' . $_SERVER['HTTP_REFERER']); // go to previous page
+    // go to previous page
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
     exit;
   }
 }

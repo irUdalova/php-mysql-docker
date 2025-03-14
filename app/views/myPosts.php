@@ -2,7 +2,7 @@
 include_once ROOT_DIR . '/app/helpers/functions.php';
 ?>
 
-<div class="main-page">
+<div class="myposts-page">
 
   <!-- <h1>MY WORDS</h1> -->
 

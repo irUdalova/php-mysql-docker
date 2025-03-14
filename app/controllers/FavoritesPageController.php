@@ -32,7 +32,7 @@ class FavoritesPageController extends AuthorisedController {
     $allWordsCount = $word->countFavWordsByUserId($userID);
 
     // pagination
-    $perPage = 3;
+    $perPage = 6;
     $params['pagination']['totalPages'] = ceil($allWordsCount / $perPage);
 
     if (isset($_GET['page'])) {

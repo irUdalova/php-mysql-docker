@@ -49,6 +49,7 @@ $userId = $_SESSION["user_id"] ?? NULL;
         <nav class="nav">
           <ul class="nav-list">
             <li class="nav-item"><a href="/" class="nav-link <?php echo parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) === "/" ? "active" : null; ?>">HOME</a></li>
+            <li class="nav-item"><a href="/explore" class="nav-link <?php echo parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) === "/explore" ? "active" : null; ?>">EXPLORE</a></li>
 
             <?php if (!$userId) : ?>
               <li class="nav-item nav-login"><a href="/login" class="nav-link  <?php echo ($_SERVER["REQUEST_URI"] === "/login") ? "active" : null; ?>">LOG IN</a></li>
