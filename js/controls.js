@@ -131,3 +131,24 @@ if (controlTagContainer) {
     });
   }
 }
+
+// toggle menu
+
+const body = document.querySelector("body");
+const menu = document.querySelector(".menu-ico");
+
+function toggleMenu() {
+  body.classList.toggle("nav-open");
+}
+
+function closeMenu(event) {
+  if (
+    event.target.closest(".close-ico") ||
+    event.target.classList.contains("bg-shadow")
+  ) {
+    toggleMenu();
+  }
+}
+
+menu.addEventListener("click", toggleMenu);
+body.addEventListener("click", closeMenu);

@@ -37,6 +37,8 @@ $userId = $_SESSION["user_id"] ?? NULL;
 
 <body>
 
+  <div class="bg-shadow"></div> <!-- Background shadow when menu is open on tablet -->
+
   <header class="header">
     <div class="container">
 
@@ -47,6 +49,8 @@ $userId = $_SESSION["user_id"] ?? NULL;
         </div>
 
         <nav class="nav">
+          <button class="close-ico"><span class="material-symbols-outlined">close</span></button>
+
           <ul class="nav-list">
             <li class="nav-item"><a href="/" class="nav-link <?php echo parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) === "/" ? "active" : null; ?>">HOME</a></li>
             <li class="nav-item"><a href="/explore" class="nav-link <?php echo parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) === "/explore" ? "active" : null; ?>">EXPLORE</a></li>
@@ -72,6 +76,8 @@ $userId = $_SESSION["user_id"] ?? NULL;
 
           </ul>
         </nav>
+
+        <button class="menu-ico"><span class="material-symbols-outlined">menu</span></button>
 
       </div>
     </div>
