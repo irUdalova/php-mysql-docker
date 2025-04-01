@@ -73,7 +73,6 @@ main {
   margin-top: -60px;
   height: 600px;
   /* background-position: center -90px; */
-  background-repeat: no-repeat;
 }
 
 .hero-about {
@@ -1441,6 +1440,49 @@ footer {
   background-color: var(--color-dark);
   color: var(--color-light);
   cursor: pointer;
+}
+
+/* 404 */
+
+.missing-wrap {
+  height: calc(100vh - 150px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.missing-img {
+  background-image: url("/public/img/404.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 81px;
+  width: 200px;
+}
+
+.title.missing {
+  text-transform: uppercase;
+  font-size: var(--font-xl);
+  margin: 0;
+}
+
+.text-missing {
+  text-align: center;
+  line-height: 24px;
+}
+
+.sbm-btn.missing {
+  padding: 10px 20px;
+  width: fit-content;
+  display: block;
+  margin-top: 20px;
+  text-transform: uppercase;
+  background-color: var(--color-dark);
+}
+
+.sbm-btn.missing:hover {
+  background-color: var(--color-accent);
 }
 
 @media (max-width: 880px) {

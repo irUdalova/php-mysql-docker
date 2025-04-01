@@ -16,7 +16,7 @@ include_once ROOT_DIR . '/app/helpers/functions.php';
       <p class="hero-about">Every family has its own unique words—newly created expressions used daily,
         sometimes unknown beyond their home. Some words belong to a specific region, shaping local identity.
         Let's dive into this boundless world of language! <br> Discover, explore, and share your own words!</p>
-      <a class="sbm-btn explore" href="/">EXPLORE</a>
+      <a class="sbm-btn explore" href="/explore">EXPLORE</a>
     </div>
   </section>
 

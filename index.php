@@ -48,6 +48,8 @@ include_once './app/controllers/PostDeletePageController.php';
 include_once './app/controllers/PostAddFavController.php';
 include_once './app/controllers/PostRemFavController.php';
 
+include_once './app/controllers/MissingPageController.php';
+
 $readAll = new PostReadAllController;
 $create = new PostCreateController;
 $readSingle = new PostReadSingleController;
@@ -79,6 +81,8 @@ $appPostDelete = new PostDeletePageController;
 
 $appPostAddFav = new PostAddFavController;
 $appPostRemFav = new PostRemFavController;
+
+$missingPage = new MissingPageController;
 
 
 RouterControllersRegistry::add($readAll);
@@ -113,9 +117,11 @@ RouterControllersRegistry::add($appPostDelete);
 RouterControllersRegistry::add($appPostAddFav);
 RouterControllersRegistry::add($appPostRemFav);
 
+
 if (RouterControllersRegistry::canHandle()) {
   RouterControllersRegistry::handle();
 } else {
   http_response_code(404);
+  $missingPage->handle();
   exit;
 }
